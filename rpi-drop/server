@@ -177,7 +177,7 @@ class Server( HTTPServer ):
                     print("ACT-RET: True: ["+(" ".join( _p[1:]))+"]");
                     self.IS_AJAX_REQ = True;
 
-                    if _p[1] == "airmon-ng"
+                    if _p[1] == "airmon-ng":
                         if _p[2] == "start":
                             if self.EXEC( "ifconfig | grep mon", RET=True ).strip() == "":
                                 self.EXEC( " ".join( _p[1:] ), RET=True );
