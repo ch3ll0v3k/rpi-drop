@@ -1,0 +1,239 @@
+<script type="text/javascript">
+    
+    // ====================================================================
+    var MARKER = '<div id="marker"></div>';
+
+    // ====================================================================
+    function REQ( link ) {
+
+        var _AJAX_ = getXmlHttp();
+
+        //alert("http://{IP}:{PORT}"+link)
+
+        _AJAX_.open('GET', "http://{IP}:{PORT}"+link, true ); // false SYNC
+        // _AJAX_.setRequestHeader('Access-Control-Allow-Origin', '*');
+        // _AJAX_.setRequestHeader('_status_', 'custom-data');
+        // -------------------------------------------
+        _AJAX_.onreadystatechange = function () {
+            if(_AJAX_.readyState == 4 && _AJAX_.status == 200){
+                // ---------------------------------------------------------
+                // var seconds = new Date().getTime() / 1000;
+                // var time = new Date().getTime();
+
+                // _AJAX_.getAllResponseHeaders();      // 
+                // _AJAX_.getResponseHeader('name');    // 
+                // _AJAX_.readyState                    // == 4
+                // _AJAX_.status                        // == 200
+                // _AJAX_.responseText                  // == text response
+
+                // ---------------------------------------------------------
+                DATA = _AJAX_.responseText.replace( / /gi , '&nbsp;');
+                DATA = DATA.replace( /\n/ig , '<br>').trim();
+
+                _byId("page-output-terminal").innerHTML += DATA+'<br>';
+
+                try{
+                    var _marker = _byId("marker");
+                    _marker.parentNode.removeChild( _marker );
+
+                }catch( e ){}
+
+                _byId("page-output-terminal").innerHTML += term+MARKER;
+                
+                try{
+                    _byId("marker").scrollIntoView( {block: "end", behavior: "smooth"} );
+
+                }catch( e ){
+                    _byId("marker").scrollIntoView( true );
+                }
+
+                // ---------------------------------------------------------
+            }
+        }
+
+        _AJAX_.send(null);
+
+    }
+
+    // ====================================================================
+    var term = '<span class="_lred">root@pi:</span>/';
+    var term_val;
+
+    function send() {
+
+        term_val = _byId("terminal-input").value.trim();
+        _byId("terminal-input").value = "";
+
+        
+        if( term_val == "clear" || term_val == "_c"){
+            _byId("page-output-terminal").innerHTML = term+'<br/>';
+
+        }else{
+
+            switch( term_val ){
+                case '_l': term_val = "ls -lah"; break;
+                case '_du': term_val = "du -sh ./*"; break;
+                case '_iface': term_val = "ifconfig | grep 'inet addr\\|HWaddr'"; break;
+
+            }
+
+            _byId("page-output-terminal").innerHTML += " "+term_val+'<br>'; //+MARKER;
+
+            term_val = term_val.replace( /\//ig, "%2F");
+            term_val = term_val.replace( /\\/ig, "%5C");
+
+            REQ( "/act-ret/"+term_val );
+            
+        }
+
+
+    }
+
+    // ====================================================================
+    window.addEventListener('load', function(){
+
+        var keys_norm = document.getElementsByClassName('t_k');
+        var keys_sp = document.getElementsByClassName('t_ksp');
+
+        for (var i = 0; i < keys_norm.length; i++) {
+            //_byId("terminal-output").innerHTML += keys_norm[i].innerHTML+'<br>';
+
+            keys_norm[i].onclick = function(){
+
+                if( this.innerHTML == '[......]' ) {
+                    _byId("terminal-input").value += ' ';
+
+                }else{
+                    _byId("terminal-input").value += this.innerHTML;
+                    
+                }
+
+            }
+
+        }
+
+    });
+
+    // ====================================================================
+    var is_lower = true;
+
+    function upper(){
+
+        for (var i = 0; i < 26; i++) {
+            var elem = _byId('ltr_'+i);
+            if( is_lower ){
+                elem.innerHTML = elem.innerHTML.toUpperCase();
+
+            }else{
+                elem.innerHTML = elem.innerHTML.toLowerCase();
+
+            }
+        }
+
+        is_lower = !is_lower;
+
+    }
+
+    // ====================================================================
+    function enter(){
+        send();
+    }
+
+    // ====================================================================
+    function ctrl_c(){
+
+    }
+
+    // ====================================================================
+    function backspace(){
+        var data = "";
+        var val = _byId("terminal-input").value;
+
+        for (var i = 0; i < val.length-1; i++) {
+            data += val[i];
+        }
+
+        _byId("terminal-input").value = data;
+
+    }
+
+    // ====================================================================
+
+</script>
+
+<!-- ================================================ -->
+<div class="row-box">
+    <div id="page-output-terminal">
+        <span class="_lred">root@pi:</span>/ inited ... <br/>
+    </div>    
+</div>
+
+<!-- ================================================ -->
+<div class="row-box" style="padding: 4px 0;">
+    <div id="terminal-input-box">
+        <input id="terminal-input" type="text"/>
+        <button id="terminal-input-btn" onclick="send()">SEND</button>
+    </div>
+</div>
+
+<!-- ================================================ -->
+<div id="keyboard">
+
+    <div class="btn_row_NOT-EVEN">
+        <button class="t_k">[</button><button class="t_k">]</button><button class="t_k">{</button><button class="t_k">}</button><button class="t_k">(</button><button class="t_k">)</button><button class="t_k">-</button><button class="t_k">_</button><button class="t_k">$</button><button class="t_ksp" style="width: 42px; color: #F00; text-shadow: 0 0 2px #000;" onclick="backspace()">&lt;</button>
+    </div>
+
+    <div class="btn_row_EVEN">
+        <button class="t_k" style="color: #ccc; text-shadow: 0 0 2px #08F;">0</button><button class="t_k" style="color: #ccc; text-shadow: 0 0 2px #08F;">1</button><button class="t_k" style="color: #ccc; text-shadow: 0 0 2px #08F;">2</button><button class="t_k" style="color: #ccc; text-shadow: 0 0 2px #08F;">3</button><button class="t_k" style="color: #ccc; text-shadow: 0 0 2px #08F;">4</button><button class="t_k" style="color: #ccc; text-shadow: 0 0 2px #08F;">5</button><button class="t_k" style="color: #ccc; text-shadow: 0 0 2px #08F;">6</button><button class="t_k" style="color: #ccc; text-shadow: 0 0 2px #08F;">7</button><button class="t_k" style="color: #ccc; text-shadow: 0 0 2px #08F;">8</button><button class="t_k" style="color: #ccc; text-shadow: 0 0 2px #08F;">9</button>
+    </div>
+
+    <div class="btn_row_NOT-EVEN">
+        <button class="t_k" id="ltr_0">a</button><button class="t_k" id="ltr_1">z</button><button class="t_k" id="ltr_2">e</button><button class="t_k" id="ltr_3">r</button><button class="t_k" id="ltr_4">t</button><button class="t_k" id="ltr_5">y</button><button class="t_k" id="ltr_6">u</button><button class="t_k" id="ltr_7">i</button><button class="t_k" id="ltr_8">o</button><button class="t_k" id="ltr_9">p</button>
+    </div>
+
+    <div class="btn_row_EVEN">
+        <button class="t_k" id="ltr_10">q</button><button class="t_k" id="ltr_11">s</button><button class="t_k" id="ltr_12">d</button><button class="t_k" id="ltr_13">f</button><button class="t_k" id="ltr_14">g</button><button class="t_k" id="ltr_15">h</button><button class="t_k" id="ltr_16">j</button><button class="t_k" id="ltr_17">k</button><button class="t_k" id="ltr_18">l</button><button class="t_k" id="ltr_19">m</button>
+    </div>
+
+    <div class="btn_row_NOT-EVEN">
+        <button class="t_k" id="ltr_20">w</button><button class="t_k" id="ltr_21">x</button><button class="t_k" id="ltr_22">c</button><button class="t_k" id="ltr_23">v</button><button class="t_k" id="ltr_24">b</button><button class="t_k" id="ltr_25">n</button><button class="t_k">/</button><button class="t_k">.</button><button class="t_k">;</button>
+    </div>
+
+    <div class="btn_row_NOT-EVEN">
+
+        <!--
+        <button class="t_ksp" style="width: 30px;">^</button>
+        <button class="t_ksp" style="width: 60px;">alt</button>
+        <button class="t_ksp" style="width: 50px; font-size: 60px;">⌨</button>
+        <button class="t_ksp" style="width: 50px; font-size: 40px;">⏏</button>
+        -->
+        <button class="t_ksp" style="width: 50px;" onclick="upper()">^</button>
+        <!--
+        <button class="t_ksp" style="width: 60px; color: #000; text-shadow: 0 0 2px #fff;" onclick="ctrl_c()">^C</button>
+        -->
+        <button class="t_k" style="width: 40px;">%</button><button class="t_k" style="width: 40px;">@</button><button class="t_k" style="width: 40px;">|</button><button class="t_k t_space_">[......]</button><button class="t_ksp" style="width: 50px; color: #0F0; text-shadow: 0 0 2px #000; " onclick="enter()">&gt;</button>
+        <!--
+        <button class="t_ksp" style="width: 60px; color: #0F0; text-shadow: 0 0 2px #000; font-size: 40px;">↩</button>
+        <button class="t_ksp" style="width: 60px; color: #0F0; text-shadow: 0 0 2px #000; font-size: 40px;">↵</button>
+        <button class="t_ksp" style="width: 60px; color: #0F0; text-shadow: 0 0 2px #000; font-size: 40px;">⬎</button>
+        <button class="t_ksp" style="width: 60px; color: #0F0; text-shadow: 0 0 2px #000; font-size: 40px;">⤶</button>
+        <button class="t_ksp" style="width: 60px; color: #0F0; text-shadow: 0 0 2px #000; font-size: 40px;">➜</button>
+        -->
+        <!--
+        SYM-SP
+        <button class="t_ksp" style="width: 50px; font-size: 50px; line-height: 64px;" onclick="upper()">⌃</button>
+        <button class="t_ksp" style="width: 60px; color: #000; text-shadow: 0 0 2px #fff;" onclick="ctrl_c()">^C</button>
+        <button class="t_k" style="width: 40px;">@</button>
+        <button class="t_k" style="width: 90px;"> </button>
+        <button class="t_ksp" style="width: 60px; color: #0F0; text-shadow: 0 0 2px #000; font-size: 36px; line-height: 40px;" onclick="enter()">⏎</button>
+        -->
+
+    </div>
+
+</div>    
+
+<!-- ================================================ -->
+<style type="text/css">
+    content-footer{ display: none !important; }
+    content-wrapper{ border-bottom: none !important; }
+</style>

@@ -1,0 +1,116 @@
+<script type="text/javascript">
+    
+    // ====================================================================
+    var MARKER = '<div id="marker"></div>';
+
+    // ====================================================================
+    function REQ( link ) {
+
+
+        var _AJAX_ = getXmlHttp();
+
+        var _mac = _byId("mac").value.trim();
+        var _pin = _byId("pin").value.trim();
+
+        if( _mac == ""){
+            alert("NO-MAC");
+            return;
+        }
+
+        link = link.replace( "{MAC}", _mac );
+        link = link.replace( "{VENDOR}", _byId("mac").value.trim() );
+        link = link.replace( "{PIN}", _pin );
+
+        //alert("http://{IP}:{PORT}"+link); return;
+
+        _AJAX_.open('GET', "http://{IP}:{PORT}"+link, true ); // false SYNC
+        // _AJAX_.setRequestHeader('Access-Control-Allow-Origin', '*');
+        // _AJAX_.setRequestHeader('_status_', 'custom-data');
+        // -------------------------------------------
+        _AJAX_.onreadystatechange = function () {
+            if(_AJAX_.readyState == 4 && _AJAX_.status == 200){
+                // ---------------------------------------------------------
+                // var seconds = new Date().getTime() / 1000;
+                // var time = new Date().getTime();
+
+                // _AJAX_.getAllResponseHeaders();      // 
+                // _AJAX_.getResponseHeader('name');    // 
+                // _AJAX_.readyState                    // == 4
+                // _AJAX_.status                        // == 200
+                // _AJAX_.responseText                  // == text response
+
+                // ---------------------------------------------------------
+                DATA = _AJAX_.responseText.replace( / /gi , '&nbsp;');
+                DATA = DATA.replace( /\n/ig , '<br>').trim();
+
+                if( DATA == "" || DATA == " " )
+                    DATA = "[200:OK]";
+
+                _byId("page-output-terminal").innerHTML = DATA;
+                _byId("page-output-terminal").innerHTML += '<br/>'+MARKER;
+                
+                try{
+                    _byId("marker").scrollIntoView( {block: "end", behavior: "smooth"} );
+
+                }catch( e ){
+                    _byId("marker").scrollIntoView( true );
+                }
+
+
+
+            }
+        }
+
+        _AJAX_.send(null);
+
+    }
+
+    // ================================================================
+    function _clear(){ _byId('page-output-terminal').innerHTML = ''; }
+
+    // ================================================================
+    // reaver/-i/mon0/-b/[MAC]/-p/[PIN]/-vv/
+
+    // ================================================================
+
+
+</script>
+
+<!-- ====================================================================== -->
+<div class="row-box">
+
+    <div class="wide_lable _lblue">
+        <div class="hide_unhide" onclick="hide_unhide( this )">-</div>
+        params
+    </div>
+
+    <div class="data-input-box">
+        <input disabled="disabled" class="input-lable" value="-b"/>
+        <input id="mac" class="data-input" placeholder="mac" value="mac" />
+    </div>
+
+    <div class="data-input-box">
+        <input disabled="disabled" class="input-lable" value="-p"/>
+        <input id="pin" class="data-input" placeholder="pin" value="12345" />
+    </div>
+
+</div>
+
+<!-- ====================================================================== -->
+<div class="row-box-closed">
+
+    <div class="wide_lable _lblue">
+        <div class="hide_unhide" onclick="hide_unhide( this )">-</div>
+        output
+    </div>
+
+    <div id="page-output-terminal"> #/output </div>
+
+    <a class="wide_btn_center _lblue" onclick="REQ('/get-ret/.%2Fparse-xml/data_cap_-01.kismet.netxml')">kismet.netxml</a>
+    <a class="wide_btn_center _lblue" onclick="REQ('/get-ret/cat/reaver.out')">reaver.out</a>
+    <a class="wide_btn_center _lgreen" onclick="REQ('/act/reaver/-i/mon0/-b/[MAC]/-p/[PIN]/-vv/>/reaver.out/\&')">./reaver</a>
+
+</div>
+
+
+

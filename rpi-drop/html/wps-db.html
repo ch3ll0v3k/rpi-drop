@@ -1,0 +1,118 @@
+<script type="text/javascript">
+    
+    // ====================================================================
+    var MARKER = '<div id="marker"></div>';
+
+    // ====================================================================
+    function REQ( link ) {
+
+
+        var _AJAX_ = getXmlHttp();
+
+        var _mac = _byId("mac").value.trim();
+        var _ven = _byId("ven").value.trim();
+
+        // if( _mac == ""){ alert("NO-MAC"); return; }
+
+        link = link.replace( "{MAC}", _mac );
+        link = link.replace( "{VEN}", _ven );
+
+        //alert("http://[IP]:[PORT]"+link); return;
+
+        _AJAX_.open('GET', "http://{IP}:{PORT}"+link, true ); // false SYNC
+        // _AJAX_.setRequestHeader('Access-Control-Allow-Origin', '*');
+        // _AJAX_.setRequestHeader('_status_', 'custom-data');
+        // -------------------------------------------
+        _AJAX_.onreadystatechange = function () {
+            if(_AJAX_.readyState == 4 && _AJAX_.status == 200){
+                // ---------------------------------------------------------
+                // var seconds = new Date().getTime() / 1000;
+                // var time = new Date().getTime();
+
+                // _AJAX_.getAllResponseHeaders();      // 
+                // _AJAX_.getResponseHeader('name');    // 
+                // _AJAX_.readyState                    // == 4
+                // _AJAX_.status                        // == 200
+                // _AJAX_.responseText                  // == text response
+
+                // ---------------------------------------------------------
+                DATA = _AJAX_.responseText.replace( / /gi , '&nbsp;');
+                DATA = DATA.replace( /\n/ig , '<br>').trim();
+
+                if( DATA == "" || DATA == " " )
+                    DATA = "[200:OK]";
+
+                _byId("page-output-terminal").innerHTML = DATA;
+                _byId("page-output-terminal").innerHTML += '<br/>'+MARKER;
+                
+                try{
+                    _byId("marker").scrollIntoView( {block: "end", behavior: "smooth"} );
+
+                }catch( e ){
+                    _byId("marker").scrollIntoView( true );
+                }
+
+
+
+            }
+        }
+
+        _AJAX_.send(null);
+
+    }
+
+    // ================================================================
+    function _clear(){ _byId('page-output-terminal').innerHTML = ''; }
+
+    // ================================================================
+    // reaver/-i/mon0/-b/[MAC]/-p/[PIN]/-vv/
+
+    // ================================================================
+
+
+</script>
+
+<!-- ====================================================================== -->
+<div class="row-box">
+
+    <div class="wide_lable _lblue">
+        <div class="hide_unhide" onclick="hide_unhide( this )">-</div>
+        search
+    </div>
+
+    <div class="data-input-box">
+        <input disabled="disabled" class="input-lable" value="-M[ac]"/>
+        <input id="mac" class="data-input" placeholder="MAC" value="mac" />
+    </div>
+
+    <div class="data-input-box">
+        <input disabled="disabled" class="input-lable" value="-V[ev]"/>
+        <input id="ven" class="data-input" placeholder="VENDOR" value="dlink" />
+    </div>
+
+    <div class="data-input-box">
+        <input disabled="disabled" class="input-lable" value="-A[ll]"/>
+        <input id="all" class="data-input" placeholder="all" value="-A[ll]" />
+    </div>
+
+</div>
+
+<!-- ====================================================================== -->
+<div class="row-box-closed">
+
+    <div class="wide_lable _lblue">
+        <div class="hide_unhide" onclick="hide_unhide( this )">-</div>
+        output
+    </div>
+
+    <div id="page-output-terminal">
+        #/output
+    </div>
+
+    <a class="s_wide_btn _lblue" onclick="REQ('/get-ret/.%2Fwps-db/-S/[MAC]')">wps-db <span class="_lgreen">-M</span></a>
+    <a class="s_wide_btn _lblue" onclick="REQ('/get-ret/.%2Fwps-db/-V/[VEN]')">wps-db <span class="_lgreen">-V</span></a>
+    <a class="s_wide_btn _lblue" onclick="REQ('/get-ret/.%2Fwps-db/-F')">wps-db <span class="_lgreen">-A</span></a>
+
+</div>
+
+

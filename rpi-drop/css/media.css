@@ -1,0 +1,191 @@
+/* <= 360px */
+@media only screen and (max-width: 360px){
+
+    /* ---------------------------------------------------*/
+    #debug-box:before{ content: '[0]:[L]:[ <= 360px ]'; }
+
+    /* ---------------------------------------------------*/
+    .k_n{ width: 6px !important; }
+    .t_k{ width: 29px !important; height: 32px; }
+    .t_ksp{ width: 40px !important; }
+    .t_space_{ width: 110px !important; }
+
+    /* ---------------------------------------------------*/
+    .wide_btn_center{ width: 91% !important; }
+    .s_wide_btn{ width: 91% !important;  }
+    .wide_btn{ width: 91% !important;  }
+
+    /* ---------------------------------------------------*/
+    .input-lable{ width: 40%; }
+    .data-input{ width: 50%; }
+
+    /* ---------------------------------------------------*/
+    #page-output-terminal{ width: 96% !important; }
+
+    /* ---------------------------------------------------*/
+
+}
+
+/* 361px - 400px */
+@media only screen and (min-width: 361px) and (max-width: 400px){
+
+    /* ---------------------------------------------------*/
+    #debug-box:before{ content: '[1]:[L]:[ 361px - 400px ]'; }
+
+    /* ---------------------------------------------------*/
+    .k_n{ width: 6px !important; }
+    .t_k{ width: 29px !important; height: 32px; }
+    .t_ksp{ width: 40px !important; }
+    .t_space_{ width: 110px !important; }
+
+    /* ---------------------------------------------------*/
+    .wide_btn_center{ width: 91% !important; }
+    .s_wide_btn{ width: 91% !important;  }
+    .wide_btn{ width: 91% !important;  }
+
+    /* ---------------------------------------------------*/
+    .input-lable{ width: 40%; }
+    .data-input{ width: 50%; }
+
+    /* ---------------------------------------------------*/
+    #page-output-terminal{ width: 92% !important; }
+
+    /* ---------------------------------------------------*/
+
+}
+
+/* 401px - 480px */
+@media only screen and (min-width: 401px) and (max-width: 480px){
+
+    /* ---------------------------------------------------*/
+    #debug-box:before{ content: '[1+]:[L]:[ 401px - 480px ]'; }
+
+    /* ---------------------------------------------------*/
+    .k_n{ width: 10px !important; }
+    .t_k{ width: 30px !important; height: 32px; }
+    .t_ksp{ width: 40px !important; }
+    .t_space_{ width: 110px !important; }
+    /* ---------------------------------------------------*/
+    .wide_btn_center{ width: 91% !important; }
+    .s_wide_btn{ width: 91% !important;  }
+    .wide_btn{ width: 91% !important;  }
+
+    /* ---------------------------------------------------*/
+    .input-lable{ width: 32%; }
+    .data-input{ width: 60%; }
+
+    /* ---------------------------------------------------*/
+    #page-output-terminal{ width: 92% !important; }
+    /* ---------------------------------------------------*/
+
+}
+
+/* 481px - 540px */
+@media only screen and (min-width: 481px) and (max-width: 540px){
+
+    /* ---------------------------------------------------*/
+    #debug-box:before{ content: '[2]:[L]:[ 481px - 540px ]'; }
+
+    /* ---------------------------------------------------*/
+    .k_n{ width: 10px !important; }
+    .t_k{ width: 30px !important; height: 32px; }
+    .t_ksp{ width: 40px !important; }
+    .t_space_{ width: 110px !important; }
+
+    /* ---------------------------------------------------*/
+    .wide_btn_center{ width: 74% !important; }
+    .s_wide_btn{ width: 74% !important;  }
+    .wide_btn{ width: 74% !important;  }
+
+    /* ---------------------------------------------------*/
+    .input-lable{ width: 32%; }
+    .data-input{ width: 60%; }
+
+    /* ---------------------------------------------------*/
+    #page-output-terminal{ width: 92% !important; }
+
+    /* ---------------------------------------------------*/
+
+}
+
+/* 541px - 640px */
+@media only screen and (min-width: 541px) and (max-width: 640px){
+
+    /* ---------------------------------------------------*/
+    #debug-box:before{ content: '[2+]:[L]:[ 541px - 640px ]'; }
+
+    /* ---------------------------------------------------*/
+    .k_n{ width: 10px !important; }
+    .t_k{ width: 34px !important; height: 32px; }
+    .t_ksp{ width: 52px !important; }
+    .t_space_{ width: 120px !important; }
+
+    /* ---------------------------------------------------*/
+    .wide_btn_center{ width: 29% !important; }
+    .s_wide_btn{ width: 29% !important; }
+    .wide_btn{ width: 29% !important; }
+
+    /* ---------------------------------------------------*/
+    .input-lable{ width: 32%; }
+    .data-input{ width: 60%; }
+
+    /* ---------------------------------------------------*/
+
+}
+
+/* 641px - 768px */ /* [ 13.4% - 768  x 1024 ] */
+@media only screen and (min-width: 641px) and (max-width: 768px){
+
+    /* ---------------------------------------------------*/
+    #debug-box:before{ content: '[3]:[L]:[ 641px - 768px ]'; }
+
+    /* ---------------------------------------------------*/
+    .k_n{ width: 12px !important; height: 36px !important; }
+    .t_k{ width: 42px !important; height: 36px !important; }
+    .t_ksp{ width: 60px !important; height: 36px !important; }
+    .t_space_{ width: 200px !important; height: 36px !important; }
+    /* ---------------------------------------------------*/
+
+    .wide_btn_center{ width: 29% !important; }
+    .s_wide_btn{ width: 29% !important; }
+    .wide_btn{ width: 29% !important; }
+
+    /* ---------------------------------------------------*/
+    .input-lable{ width: 24%; }
+    .data-input{ width: 70%; }
+
+    /* ---------------------------------------------------*/
+
+}
+
+/* 769px - 1024px */ /* [ 3.2%  - 1024 x 768  ] */
+@media only screen and (min-width: 769px) and (max-width: 1024px){
+    #debug-box:before{ content: '[4]:[L]:[ 769px - 1024px ]'; }
+
+    /* ---------------------------------------------------*/
+    .k_n{ width: 12px !important; height: 36px !important; }
+    .t_k{ width: 52px !important; height: 36px !important; }
+    .t_ksp{ width: 68px !important; height: 36px !important; }
+    .t_space_{ width: 240px !important; height: 36px !important; }
+
+    /* ---------------------------------------------------*/
+    .wide_btn_center{ width: 20% !important; }
+    .s_wide_btn{ width: 20% !important;  }
+    .wide_btn{ width: 20% !important;  }
+
+    /* ---------------------------------------------------*/
+
+}
+
+/* 1025px - 1280px */
+@media only screen and (min-width: 1025px) and (max-width: 1280px){
+    #debug-box:before{ content: '[5]:[L]:[ 1025px - 1280px ]'; }
+
+}
+
+/* 1281px >= */
+@media only screen and (min-width: 1281px){
+    #debug-box:before{ content: '[6]:[L]:[ 1281px >= ]'; }
+
+}
+

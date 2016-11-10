@@ -1,0 +1,371 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+########################################################################
+import sys, time, urllib
+#from threading import Timer
+
+import xml.etree.ElementTree as XML
+#import bsddb
+# ----------------------------------------------------------------------
+class Xml_Parser(object):
+    # ==================================================================
+    def __init__(self, arg=None):
+
+        # --------------------------------------------------------------
+        self._xml_doc_name                  = arg[1]
+        #self._search_pattern                = arg[2]
+        #self._save_search_pattern_name      = arg[3]
+        #self._save_ext                      = ".dat"
+
+        #self._NEW_DATA_ARRAY                = [];
+        #self._NEW_DATA_STRING               = "";
+
+        self.CSV_DATA                       = [];
+        # --------------------------------------------------------------
+        self.NET_TYPEs                      = {};
+        self.ENCODINGs                      = {};
+        self.ENCRYPTIONs                    = {};
+        self.MANUFs                         = {};
+        self.CARRIERs                       = {};
+
+        self.ESSIDs                         = {};
+
+        # --------------------------------------------------------------
+        self.NOT_FOUND_C                    = 0;
+        self.EXCLUDE                        = [
+
+            #"PROXIMUS_FON",
+            #"PROXIMUS_AUTO_FON",
+            #"TelenetWiFree",
+            #"TELENETHOMESPOT",
+            #"telenet-",
+            #"bbox2-",
+            #"WiFi-2.4-"
+
+        ];
+
+        self.NET_C                          = 0; 
+        self.NET_C_DOUBLE                   = 0;
+        # --------------------------------------------------------------
+        self.INIT();
+        # --------------------------------------------------------------
+
+    # ==================================================================
+    def INIT(self ):
+
+        # --------------------------------------------------------------
+        """
+        FS = open("oud.20.03.2016-20.00.csv", "r");
+        self.CSV_DATA = FS.readlines();
+        FS.close();
+        """
+
+        # --------------------------------------------------------------
+        self.PARSE_DOC( );        
+        #self.GET_DATA_BY_TAG( _tag="BSSID");
+        # --------------------------------------------------------------
+
+    # ==================================================================
+    def PARSE_DOC(self):
+
+        # --------------------------------------------------------------
+        XML_DOM = XML.parse( self._xml_doc_name );
+        XML_ROOT = XML_DOM.getroot()
+
+        #time = XML_ROOT.find('time').text
+
+        # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        for mNet in XML_ROOT.iter('wireless-network'):
+            
+            try:
+
+                # ----------------------------------------------------------------
+                # <wireless-network first-time="Sun Mar 20 20:30:17 2016" last-time="Sun Mar 20 20:59:15 2016">
+                # <SSID first-time="Sun Mar 20 20:30:17 2016" last-time="Sun Mar 20 20:59:15 2016">
+                
+                # time.ctime(int("1458505996")); # 'Sun Mar 20 20:30:17 2016'
+                SSID                = mNet.find('SSID');  # block info
+                ESSID               = SSID.find('essid');
+
+                # ----------------------------------------------------------------
+                # ESSID-NAME -> Filter
+                _continue           = False;
+
+                for exc in self.EXCLUDE:
+                    if ESSID.text[0: len(exc) ] == exc:
+                        _continue = True;
+                        break;
+
+                if _continue:
+                    continue;
+
+                # ----------------------------------------------------------------
+                # ESSID-NAME-DUBLICATE -> Filter
+                if ESSID.text in self.ESSIDs:
+
+                    self.NET_C_DOUBLE += 1;
+                    continue;
+
+                else:
+                    self.ESSIDs[ ESSID.text ] = "1";
+                    self.NET_C += 1;
+
+                # ----------------------------------------------------------------
+                NET_NR              = mNet.get('number'); # scann-num
+                TIME_FIRST          = mNet.get('first-time');
+                TIME_LAST           = mNet.get('last-time');
+                BSSID               = mNet.find('BSSID'); # MAC
+                CARRIER             = mNet.find('carrier');
+
+                # ----------------------------------------------------------------
+                # SORT
+                try:
+                    NET_TYPE = mNet.get('type'); # infrastructure | etc .. 
+                    self.NET_TYPEs[ NET_TYPE ] = "";
+
+                except: pass;
+
+                try:
+
+                    for ENCODING in mNet.iter('encoding'):
+                        self.ENCODINGs[ ENCODING.text ] = "";
+                    ENCODING = mNet.find('encoding');
+
+                except: pass;
+
+                try:
+
+                    for ENCRYPTION in SSID.iter('encryption'):
+                        self.ENCRYPTIONs[ ENCRYPTION.text ] = "";
+                    ENCRYPTION = SSID.find('encryption');
+
+                except: pass;
+
+                try:
+                    
+                    for MANUF in mNet.iter('manuf'): # manufactor
+                        self.MANUFs[ MANUF.text ] = "";
+                    MANUF = mNet.find('manuf'); # manufactor
+                
+                except: pass;
+             
+                try:
+
+                    for CARRIER in mNet.iter('carrier'):
+                        self.CARRIERs[ CARRIER.text ] = "";
+                    CARRIER = mNet.find('carrier');
+                
+                except: pass;
+
+                # ----------------------------------------------------------------
+                # get cords from time *.netxml
+                found = False;
+                try:
+                    for data in self.CSV_DATA:
+
+                        data = data.split(",");
+                        start_time_ofset = -20;
+                        end_time_ofset   = 20;
+
+                        while start_time_ofset != end_time_ofset:
+                           
+                            if str(time.ctime( int( data[1] )- start_time_ofset  )) == TIME_FIRST:
+                                print( " [ {0:2} ] ".format( str(start_time_ofset) )+": [' "+str(BSSID.text)+" '] : [{0:4}]".format( str(self.NET_C) )+"[ {0:12}, {1:12} ]".format(data[2],data[3])+"['{0:34}']".format(ESSID.text));
+                                found = True;
+                                break;
+                            
+                            start_time_ofset += 1;
+
+                        if found:
+                            break;
+
+                except Exception as _exception:
+                    print( "Exception: "+str(_exception) );
+
+                if not found:
+                    self.NOT_FOUND_C += 1;
+             
+                # ----------------------------------------------------------------
+                print(("|"+"-"*49)+"|");
+                #print("| ID: ["+str(NET_NR)+"] ["+str(NET_TYPE)+"] ['"+str(TIME_FIRST)+" -> "+str(TIME_LAST)+"']");
+                print("  ID: ["+str(NET_NR)+"] ["+str(NET_TYPE)+"]")
+
+                try:
+                    pass; 
+                    #print( "{0:20} ::: {1:20}".format( "SSID", str(SSID.text) ) );
+                except:pass;
+
+                try:
+                    print( "| {0:20}   : ['{1:20}']".format( "BSSID", str(BSSID.text) ) );
+                except:pass;
+
+                try:
+                    print( "| {0:20}   : ['{1:20}']".format( "ESSID", str(ESSID.text) ) );
+                except:pass;
+
+                try:
+                    print( "| {0:20}   : ['{1:20}']".format( "ENCODING", str(ENCODING.text) ) );
+                except:pass;
+
+                try:
+                    print( "| {0:20}   : ['{1:20}']".format( "ENCRYPTION", str(ENCRYPTION.text) ) );
+                except:pass;
+
+                try:
+                    print( "| {0:20}   : ['{1:20}']".format( "MANUF", str(MANUF.text) ) );
+                except:pass;
+
+
+            except Exception as _exception:
+                print(_exception);
+                #pass;
+                #print("Network ID: "+str(mNet.get('number'))+str(_INCOMPLITE_DOM_MODEL));                
+            
+            #break;
+        # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::       
+        #print("NO-DATA found: ["+str(self.NOT_FOUND_C)+"] DOUBLE: ["+str(self.NET_C_DOUBLE)+"]");
+
+        """
+        Object mDevObj = {
+
+            "time" : "1231313",
+            "data" : {}
+
+
+        }
+
+        Object mLocObj = {
+
+            "time" : "1231313",
+            "lat"  : "53.3333",
+            "lon"  : "3.3333"
+
+        }
+        """
+
+        # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::       
+        SYM = "    ";
+
+        """
+        print(("-"*60)+"\n"+"NET_TYPEs: \n");
+        for _this in self.NET_TYPEs:
+            print(SYM+_this);
+
+        print(("-"*60)+"\n"+"ENCODINGs: \n");
+        for _this in self.ENCODINGs:
+            print(SYM+_this);
+
+        print(("-"*60)+"\n"+"ENCRYPTIONs: \n");
+        for _this in self.ENCRYPTIONs:
+            print(SYM+_this);
+
+        print(("-"*60)+"\n"+"MANUFs: \n");
+        for _this in self.MANUFs:
+            print(SYM+_this);
+
+        print(("-"*60)+"\n"+"CARRIERs: \n");
+        for _this in self.CARRIERs:
+            print(SYM+_this);
+        """
+
+        # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        #self._save_new_data(_data_to_save=self._NEW_DATA_ARRAY, _new_file_name=self._save_search_pattern_name)
+        # --------------------------------------------------------------
+
+    # ==================================================================
+    def GET_DATA_BY_TAG(self,_tag, _xml_doc_name=""):
+
+        # --------------------------------------------------------------
+        if _xml_doc_name == "":
+            XML_DOM = XML.parse(self._xml_doc_name);
+        else:
+            XML_DOM = XML.parse(_xml_doc_name);
+        # --------------------------------------------------------------
+
+        XML_ROOT = XML_DOM.getroot();
+
+        _ALL_FOUNDET_UNIQUE_TAGS = {}
+
+        for network in XML_ROOT.iter('wireless-network'):
+            
+            # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+            try:
+                #print("Network ID: "+network.get('number')); 
+
+                #print(network.find(_tag).text)
+                _ALL_FOUNDET_UNIQUE_TAGS[network.find(_tag).text] = 1;
+                        
+            except Exception as _INCOMPLITE_DOM_MODEL:
+
+                print("DOM: "+str(_INCOMPLITE_DOM_MODEL) );
+            # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        
+        # --------------------------------------------------------------
+
+        for _data in _ALL_FOUNDET_UNIQUE_TAGS:
+            self._NEW_DATA_ARRAY.append(_data);
+            #print(_data+"|"+_data)
+
+
+        #self._save_new_data(_data_to_save=self._NEW_DATA_ARRAY, _new_file_name=_tag)
+
+        # --------------------------------------------------------------
+
+    # ==================================================================
+    def _save_new_data(self, _data_to_save="NO-DATA-TO-SAVE", _new_file_name="NO-NEW-NAME"):
+
+        # --------------------------------------------------------------
+        _tmp_data = "";
+
+        if type(_data_to_save) == list:
+            
+            for _data in _data_to_save:
+                _tmp_data += _data[0:2]+_data[3:5]+_data[6:8]+"|"+_data+"\n"
+
+        _data_to_save = _tmp_data;
+        # --------------------------------------------------------------
+        f = open(_new_file_name+self._save_ext, 'wb');
+        f.write(_data_to_save);
+
+        f.close();
+
+        # --------------------------------------------------------------
+
+    # ==================================================================
+    def _get_http_file(self, _address="", _new_name="_new_name.file"):
+
+        # --------------------------------------------------------------
+        try:
+
+            u = urllib.urlopen(_address);
+            data = u.read();
+
+            f = open(_new_name, 'wb');
+            f.write(data);
+
+            f.close();
+            print("File: "+_address+" saved successfull: "+_new_name);
+        except Exception as _http_err:
+
+            print("http error: "+str(_http_err));
+
+        # --------------------------------------------------------------
+
+    # ==================================================================
+
+########################################################################
+if __name__ == '__main__':
+
+    if len(sys.argv) > 1:
+
+        Parser = Xml_Parser(sys.argv);
+
+    else:
+
+        print("\n\tNo document specified. Exit now \n");
+
+
+
+
+
+

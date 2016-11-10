@@ -1,0 +1,99 @@
+#!/usr/bin/python
+
+import os, sys
+
+# =====================================================================
+WPS_DB = "/m-sys/x/wireless/WPS-pins/WPS-PINS-by-MAC/WPS-PIN-AND-MAC.UNIQUE.list";
+args = sys.argv[1:];
+
+pin = ""; row = ""; mac = "";
+vendor = ""; model = ""; pin = ""; 
+
+arr = [];
+
+#print( args); exit();
+
+
+# =====================================================================
+DB = open( WPS_DB ).readlines();
+
+if args[0] == "-V":
+
+    VENDOR = args[1].strip().upper();
+
+    for p in DB:
+        p = p.strip();
+
+        if p[0] == "#" or p[3] == "#": 
+            continue;
+
+        try:
+            ven = p.split(":")[0].upper().strip();
+            ven = ven.replace("-", "");
+            ven = ven.replace(".", "");
+            ven = ven.replace(":", "");
+            ven = ven.replace(",", "");
+            ven = ven.replace("_", "");
+
+            if VENDOR in ven:
+
+                arr = p.split("|");
+                vendor, model, pin  = arr[0].split(":");
+                mac = arr[1].strip();
+
+                # full info
+                #print( "vendor: ["+vendor+"] > model: ["+model+"] > pin: ["+pin+"] > mac: ["+mac+"]" );
+                print(  " mac: ["+mac+"] pin: ["+pin+"]" );
+
+        except Exception as _err: pass;
+
+if args[0] == "-S":
+
+    MAC = args[1].strip().upper()[0:8]; #00/00/00/00/00/00
+
+    for p in DB:
+        p = p.strip();
+
+        if p[0] == "#" or p[3] == "#": 
+            continue;
+
+        try:
+            #print(p)
+            arr = p.split("|");
+            vendor, model, pin  = arr[0].split(":");
+            mac = arr[1].strip();
+
+            # full info
+            #print( "vendor: ["+vendor+"] > model: ["+model+"] > pin: ["+pin+"] > mac: ["+mac+"]" );
+            #print(  " mac: ["+mac+"] pin: ["+pin+"]" );
+
+            #print(  MAC, ">", mac.upper().strip() );
+            if MAC == mac.upper().strip():
+                print( " mac: ["+mac+"] pin: ["+pin+"]" );
+
+
+        except Exception as _err: pass;
+
+elif args[0] == "-F":
+
+    for p in DB:
+
+        p = p.strip();
+
+        if p[0] == "#" or p[3] == "#": 
+            continue;
+
+        try:
+            arr = p.split("|");
+            vendor, model, pin  = arr[0].split(":");
+            mac = arr[1].strip();
+
+            # full info
+            #print( "vendor: ["+vendor+"] > model: ["+model+"] > pin: ["+pin+"] > mac: ["+mac+"]" );
+            print(  " mac: ["+mac+"] pin: ["+pin+"]" );
+
+        except Exception as _err: #pass;
+            print( _err );
+
+
+# =====================================================================

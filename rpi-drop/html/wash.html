@@ -1,0 +1,79 @@
+<script type="text/javascript">
+    // ================================================================
+    function REQ( link ) {
+
+        var _AJAX_ = getXmlHttp();
+
+        _AJAX_.open('GET', "http://{IP}:{PORT}"+link, true ); // false SYNC
+        // _AJAX_.setRequestHeader('Access-Control-Allow-Origin', '*');
+        // _AJAX_.setRequestHeader('_status_', 'custom-data');
+        // -------------------------------------------
+        _AJAX_.onreadystatechange = function () {
+            if(_AJAX_.readyState == 4 && _AJAX_.status == 200){
+                // ---------------------------------------------------------
+                // var seconds = new Date().getTime() / 1000;
+                // var time = new Date().getTime();
+
+                // _AJAX_.getAllResponseHeaders();      // 
+                // _AJAX_.getResponseHeader('name');    // 
+                // _AJAX_.readyState                    // == 4
+                // _AJAX_.status                        // == 200
+                // _AJAX_.responseText                  // == text response
+                // ---------------------------------------------------------
+                //alert( _AJAX_.responseText );
+                // ---------------------------------------------------------
+                DATA = _AJAX_.responseText.replace( / /gi , '&nbsp;');
+                DATA = DATA.replace( /\n/ig , '<br>').trim();
+
+
+                _byId("page-output-terminal").innerHTML += DATA;
+                _byId("page-output-terminal").innerHTML += '<br/>';
+            }
+        }
+
+        _AJAX_.send(null);
+
+    }
+
+    // ================================================================
+    function _clear(){ _byId('page-output-terminal').innerHTML = ''; }
+    // ================================================================
+    // -c [IFACE] > mon[0]
+    // sudo wash -C -s -i mon0 // -s, --scan      Use scan mode
+    // sudo wash -C -u -i mon0 // -u, --survey    Use survey mode [default]
+
+
+    // wash -C -u -i mon0 > wash.out &
+    // ================================================================
+
+
+</script>
+
+<div class="row-box">
+    <div class="wide_lable _lblue">
+        <div class="hide_unhide" onclick="hide_unhide( this )">-</div>
+        wash init
+    </div>
+    <a class="wide_btn _lgreen" onclick="REQ('/act/wash/-C/-s/-i/mon0/>/wash.out/\&')">wash -s</a>
+    <a class="wide_btn _lgreen" onclick="REQ('/act/wash/-C/-u/-i/mon0/>/wash.out/\&')">wash -u</a>
+    <a class="wide_btn_center _lred" onclick="REQ('/act-ret/pkill/wash')">stop</a>
+
+</div>
+
+<!-- ====================================================================== -->
+<div class="row-box-closed">
+
+    <div class="wide_lable _lblue">
+        <div class="hide_unhide" onclick="hide_unhide( this )">-</div>
+        console
+    </div>
+
+    <div id="page-output-terminal">#/output</div>
+
+    <a class="wide_btn _lblue" onclick="_clear()">clear</a>
+    <a class="wide_btn _lblue" onclick="REQ('/act-ret/cat/wash.out')">update</a>
+
+</div>
+
+
+

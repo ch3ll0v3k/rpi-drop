@@ -1,0 +1,56 @@
+<!-- ====================================================================== -->
+<script type="text/javascript">
+
+    // ================================================================
+    window.addEventListener('load', function(){ /* */ });
+
+    // ================================================================
+    function REQ_INDEX( link ) {
+
+        // --------------------------------------------------------
+        var _AJAX_ = getXmlHttp();
+
+        _AJAX_.open('GET', "http://{IP}:{PORT}"+link, true ); // false SYNC
+        // -------------------------------------------
+        _AJAX_.onreadystatechange = function () {
+            if(_AJAX_.readyState == 4 && _AJAX_.status == 200){
+                alert( _AJAX_.responseText );
+            }
+        }
+
+        _AJAX_.send(null);
+        // --------------------------------------------------------
+
+    }
+
+</script>
+
+<!-- ====================================================================== -->
+<div class="row-box">
+    <div class="wide_lable _lblue">
+        <div class="hide_unhide" onclick="hide_unhide( this )">-</div>
+        lable
+    </div>
+
+    <a class="wide_btn _lgreen" onclick="REQ('/act-ret/')">act</a>
+    <a class="wide_btn _lred" onclick="REQ('/act-ret/')">act</a>
+
+</div>
+
+<!-- ====================================================================== -->
+<div class="row-box-closed">
+
+    <div class="wide_lable _lblue">
+        <div class="hide_unhide" onclick="hide_unhide( this )">-</div>
+        console
+    </div>
+
+    <div id="page-output-terminal">
+        #/output
+    </div>
+
+    <a class="s_wide_btn _lgreen" onclick="REQ('/act-ret/')">act</a>
+    <a class="s_wide_btn _lred" onclick="REQ('/act-ret/')">act</a>
+
+</div>
+<!-- ====================================================================== -->

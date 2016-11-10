@@ -1,0 +1,86 @@
+<script type="text/javascript">
+    
+    // ====================================================================
+    function REQ( link ) {
+
+        var _AJAX_ = getXmlHttp();
+        _AJAX_.open('GET', "http://{IP}:{PORT}"+link, true ); // false SYNC
+        // -------------------------------------------
+        _AJAX_.onreadystatechange = function () {
+            if(_AJAX_.readyState == 4 && _AJAX_.status == 200){
+
+                // ---------------------------------------------------------
+                DATA = _AJAX_.responseText.replace( / /gi , '&nbsp;');
+                DATA = DATA.replace( /\n/ig , '<br>').trim();
+
+                if( DATA == "" || DATA == " " )
+                    DATA = "[200:OK]";
+
+                _byId("page-output-terminal").innerHTML = DATA;
+                _byId("page-output-terminal").innerHTML += '<br/>'+MARKER;
+                
+                try{
+                    _byId("marker").scrollIntoView( {block: "end", behavior: "smooth"} );
+
+                }catch( e ){
+                    _byId("marker").scrollIntoView( true );
+                }
+
+                // ---------------------------------------------------------
+            }
+        }
+
+        _AJAX_.send(null);
+
+    }
+
+    // ================================================================
+    function _clear(){ _byId('page-output-terminal').innerHTML = ''; }
+    // ================================================================
+    // 
+    // nohup/airodump-ng/mon0/--manufacturer/--output-format/netxml/--write/data.cap/>/airodump-ng.out/2>\&1/\&
+
+    // nohup airodump-ng mon0 > file.txt 2>&1 &
+    // airodump-ng mon0 --manufacturer --output-format netxml --write data_cap_
+    // ================================================================
+
+</script>
+
+<div class="row-box-closed">
+    <div class="wide_lable _lblue">
+        <div class="hide_unhide" onclick="hide_unhide( this )">-</div>
+        airmon-ng
+    </div>
+
+    <a class="wide_btn _lgreen" onclick="REQ('/act-ret/airmon-ng/start/wlan0')">start</a>
+    <a class="wide_btn _lred" onclick="REQ('/act-ret/airmon-ng/stop/mon0')">stop</a>
+
+</div>
+
+<div class="row-box-closed">
+    <div class="wide_lable _lblue">
+        <div class="hide_unhide" onclick="hide_unhide( this )">-</div>
+        airodump-ng
+    </div>
+
+    <a class="wide_btn _lgreen" onclick="REQ('/act/rm/-f/data_cap_*/;/airodump-ng/mon0/--manufacturer/--output-format/netxml/--write/data_cap_/\&')">start</a>
+    <a class="wide_btn _lred" onclick="REQ('/act-ret/pkill/airodump-ng')">stop</a>
+
+</div>
+
+<!-- ====================================================================== -->
+<div class="row-box-closed">
+
+    <div class="wide_lable _lblue">
+        <div class="hide_unhide" onclick="hide_unhide( this )">-</div>
+        console
+    </div>
+
+    <div id="page-output-terminal">
+        #/output
+    </div>
+
+    <a class="wide_btn _lblue" onclick="_clear()">clear</a>
+    <a class="wide_btn _lblue" onclick="REQ('/get-ret/.%2Fparse-xml/data_cap_-01.kismet.netxml')">kismet.netxml</a>
+</div>
+

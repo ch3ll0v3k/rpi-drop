@@ -1,0 +1,426 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#######################################################################################
+import SocketServer
+import json, time, urllib2, sys, os, curses
+
+from subprocess import Popen, PIPE, call
+from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+from random import randint
+from time import sleep, gmtime
+
+from urlparse import urlparse
+#######################################################################################
+
+ROOT = os.path.dirname(os.path.abspath(__file__))+"/";
+
+class Server( HTTPServer ):
+   
+    # =================================================================
+    def __init__(self):
+
+        # -------------------------------------------------------------
+        self.THIS_PAGE = "";
+
+        self.APP = {
+
+            # server 
+            "css_1"         : ROOT+"css/ids.css",
+            "css_2"         : ROOT+"css/media.css",
+
+            "js_1"          : ROOT+"js/temax-main-v1.0.0.js", # MAIN-LIB
+            "js_2"          : ROOT+"js/js_2.js", # GET/POST
+            "js_3"          : ROOT+"js/js_3.js", # SIMULATE/KEYS
+
+            # menu
+            "settings"      : ROOT+"html/settings.html",
+            "system"        : ROOT+"html/system.html",
+            "index"         : ROOT+"html/index.html",
+
+            # tools
+            #"scanner"       : ROOT+"html/scanner.html",
+
+        }
+
+        # -------------------------------------------------------------
+        self.INTERFACE                              = "wlan0"; #"eth1";
+        self.ARCH                                   = "Intel - x32";
+        self.IS_ARM                                 = False;
+
+        self.SERVER_IP                              = "";
+        self.SERVER_PORT                            = 8080;
+        self.ADDR                                   = '0.0.0.0';
+
+        self.IS_AJAX_REQ                            = False;
+        self.AJAX_RET_VAL                           = "";
+
+        self.KEY                                    = 'key';
+        self.REMOTE_IP                              = "";
+        self.REMOTE_PORT                            = 0;
+        self.LOCK_PID                               = 'lock.pid';
+        
+        self.LOG_NUM                                = 0;
+        self.INITED                                 = False; 
+        self.CTRL                                   = {};
+
+        self.CODE                                   = 200;
+        self.TYPE                                   = "text/html";
+        self.RESPONSE                               = "";
+        self.HEADER                                 = "[HDR]";
+
+        # ---------------------------------------------------------
+        self.HEADERS = {
+            "User-Agent"        : "Mozilla/5.0 (Win-32; rv:24.0) Gecko/20140723 Firefox/24.0 Iceweasel/24.7.0",
+            "Accept"            : "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language"   : "en-US,en;q=0.5",
+            "Referer"           : "https://awesome-site.com/",
+            "Connection"        : "keep-alive",
+            "Cache-Control"     : "max-age=0",
+            "Cookie"            : ""
+        }
+
+        self.INIT();
+
+        # ---------------------------------------------------------
+        while True:
+
+            try:
+
+                HTTPServer.__init__(self, (self.ADDR, self.SERVER_PORT ), HANDLER);
+
+                print( "HTTPD  :["+str(self.ADDR)+":"+str(self.SERVER_PORT)+"]" );
+
+                self.serve_forever();
+
+            except KeyboardInterrupt as _err:
+                print("KeyboardInterrupt: "+str(_err)+"\n");
+                exit();
+                
+            except Exception as _err:
+                print("Exception: "+str(_err)+"\n");
+
+        # ---------------------------------------------------------
+
+    # =================================================================
+    def INIT(self):
+
+        # -------------------------------------------------------------
+        CMD = 'uname -a | grep armv7';
+        self.IS_ARM = True if self.EXEC( CMD, True ).strip() != "" else False;
+
+        if self.IS_ARM:
+            self.INTERFACE = "wlan0";
+            self.ARCH = "ARM.hf - v7"
+
+        CMD = '/sbin/ifconfig '+self.INTERFACE+' | grep "inet addr" | awk -F: \'{print $2}\' | awk \'{print $1}\';';
+        self.SERVER_IP = self.EXEC( CMD, True );
+
+        CMD = 'getconf WORD_BIT'; # 32
+        self.WORD_BIT = self.EXEC( CMD, True );
+
+
+        print(("-"*72)+"\n");
+        print( "SERVER :["+str(self.SERVER_IP)+":"+str(self.SERVER_PORT)+"]" );
+        print( "IFACE  :["+self.INTERFACE+" => x"+str(self.WORD_BIT)+"]" );
+        print( "ARCH   :["+self.ARCH+"]" );
+
+
+        # -------------------------------------------------------------
+        self.INITED = True;
+        # -------------------------------------------------------------
+
+    # =================================================================
+    def PROCESS(self, _p):
+
+        # ---------------------------------------------------------
+        self.RESPONSE   = "";
+        self.THIS_PAGE  = "";
+        self.IS_AJAX_REQ = False;
+
+        # ---------------------------------------------------------
+        try:
+
+            _p = _p.strip();
+            _p = _p.replace("//", "/");
+
+            if _p == "/":
+                self.THIS_PAGE = open( self.APP["index"] ).read();
+
+            else:
+    
+                if _p[0] == "/": _p = _p[1:];
+                if _p[-1] == "/": _p = _p[0:len(_p)-1];
+
+                _p = _p.split("/"); # _p[0] = _p[0].strip();
+
+                for i in xrange(0, len(_p)):
+                    _p[i] = _p[i].replace("%20", " ");
+                    _p[i] = _p[i].replace("%2F", "/");
+                    _p[i] = _p[i].replace("%5C", "\\");
+                    _p[i] = _p[i].replace("%7C", "|");
+                    _p[i] = _p[i].replace("%7B", "{");
+                    _p[i] = _p[i].replace("%7D", "}");
+                    _p[i] = _p[i].replace("%5E", "^");
+                    _p[i] = _p[i].replace("%3E", ">");
+                    _p[i] = _p[i].replace("%3C", "<");
+                    _p[i] = _p[i].replace("%22", '"');
+
+
+                if _p[0] == self.KEY:
+                    self.UNLOCK();
+                    self.THIS_PAGE = open( self.APP["index"] ).read();
+
+                elif _p[0] == "lock":
+                    self.LOCK();
+
+                elif _p[0] == "act-ret":
+                    print("ACT-RET: True: ["+(" ".join( _p[1:]))+"]");
+                    self.IS_AJAX_REQ = True;
+
+                    if _p[1] == "airmon-ng"
+                        if _p[2] == "start":
+                            if self.EXEC( "ifconfig | grep mon", RET=True ).strip() == "":
+                                self.EXEC( " ".join( _p[1:] ), RET=True );
+                                
+                            else:
+                                self.AJAX_RET_VAL = "ALLREADY-ENABLED: [mon0]";
+
+                    else:
+                        self.EXEC( " ".join( _p[1:] ), RET=True );
+
+                elif _p[0] == "set-ret":
+                    self.IS_AJAX_REQ = True;
+                    self.EXEC( " ".join( _p[1:] ), RET=True );
+                    # $*$ print("SET-RET: "+_p[2]);
+
+                elif _p[0] == "get-ret":
+                    self.IS_AJAX_REQ = True;
+                    self.EXEC( " ".join( _p[1:] ), RET=True );
+
+                elif _p[0] == "act":
+                    print("ACT: True: ["+(" ".join( _p[1:]))+"]");
+                    self.IS_AJAX_REQ = True;
+                    self.EXEC( " ".join( _p[1:] ) );
+                    # $*$ print("ACT: "+_p[2]);
+
+                elif _p[0] == "set":
+                    self.IS_AJAX_REQ = True;
+                    # $*$ print("SET: "+_p[2]);
+
+                elif _p[0] == "get":
+                    self.IS_AJAX_REQ = True;
+                    # $*$ print("GET: "+_p[2]);
+
+                    # act > airmon-ng > stop > param
+                    # self.EXEC( self.CTRL[ _p[0] ][ _o[1] ] );
+
+                else:
+                    self.THIS_PAGE = open( ROOT+"html/"+_p[0]+".html" ).read();
+
+
+                self.THIS_PAGE = self.REPLACE_HOLDERS( self.THIS_PAGE );
+                #print("self.THIS_PAGE: ["+self.THIS_PAGE+"]" );
+
+            self.CODE = 200;
+            self.RESPONSE = "STATUS: [200]";
+
+        except Exception as _err:
+            self.DEBUG();
+
+        # ---------------------------------------------------------
+
+    # =================================================================
+    def EXEC( self, CMD, RET=False ):
+
+        # ---------------------------------------------------------
+        try:
+
+            if RET:
+
+                DATA = Popen( CMD, shell=True, stdout=PIPE, stderr=PIPE ).communicate(); #[0].replace("\n", " ").strip()
+                if DATA[1] != "":
+                    #print( DATA[1].replace("\\n", "\n") );
+                    self.AJAX_RET_VAL = DATA[1].strip(); # NOT-ALLWAYS NEEDET
+                    return self.AJAX_RET_VAL;
+                else:
+                    self.AJAX_RET_VAL = DATA[0].strip(); # NOT-ALLWAYS NEEDET
+                    return self.AJAX_RET_VAL;
+
+            else:
+                self.AJAX_RET_VAL = call( CMD, shell=True);
+
+        except Exception as _err:
+            self.DEBUG();
+
+        # ---------------------------------------------------------
+
+    # =================================================================
+    def REPLACE_HOLDERS(self, DATA ):
+
+        # ---------------------------------------------------------
+        DATA = DATA.replace("{IP}", str(self.SERVER_IP) );
+        DATA = DATA.replace("{PORT}", str(self.SERVER_PORT) );
+
+        DATA = DATA.replace("{DATE}", str(self.GET_DATE_TIME()) );
+
+        return DATA;
+        # ---------------------------------------------------------
+
+    # =================================================================
+    def GET_DATE_TIME(self):
+        
+        # ---------------------------------------------------------
+        t = gmtime();
+        return str(t.tm_mday)+"-"+str(t.tm_mon)+"-"+str(t.tm_year)+" / "+str(t.tm_hour)+":"+str(t.tm_min)+":"+str(t.tm_sec);
+        # ---------------------------------------------------------
+
+
+    # =================================================================
+    def LOCK(self):
+        with open(self.LOCK_PID, "w") as FS_LOCK:
+            FS_LOCK.write("1|000.000.000");
+
+    def UNLOCK(self):
+        with open(self.LOCK_PID, "w") as FS_LOCK:
+            FS_LOCK.write("0|"+self.REMOTE_IP);
+
+    def IS_LOCKED(self):
+
+        LK_DATA = open(self.LOCK_PID).read().strip().split("|");
+
+        if LK_DATA[0] == "1" or LK_DATA[1] != self.REMOTE_IP:
+            return True;
+        
+        return False;
+
+
+    # =================================================================
+    def DEBUG(self):
+
+        print( '-'*72 );
+        exc_type, exc_obj, tb = sys.exc_info()
+
+        raport = "\tFILE: ['"+tb.tb_frame.f_code.co_filename+"', '"+str(tb.tb_lineno)+"']\n";
+        raport += "\tDESC: ['"+str(exc_type.__name__)+"', '"+str(exc_obj)+"']";
+
+        print( "Exception: NR: ["+str(self.LOG_NUM)+"]\n" + raport );
+        self.LOG_NUM += 1;
+
+        self.CODE = 200;
+        self.RESPONSE = raport.replace("\n", '<br>');
+
+
+#######################################################################################
+class HANDLER(BaseHTTPRequestHandler):
+
+    # =================================================================
+    def __init__(self, request, client_address, SRV):
+
+        # -------------------------------------------------------------
+        BaseHTTPRequestHandler.__init__(self, request, client_address, SRV);
+
+        # -------------------------------------------------------------
+
+    # =================================================================
+    def SET_HEADERS(self, _CODE=200, _TYPE="text/html"):
+        
+        # ---------------------------------------------------------
+        try:
+
+            self.send_response( _CODE );
+            #self.send_header('Access-Control-Allow-Origin', '*');
+            self.send_header('Content-type', _TYPE);
+            self.send_header('Cache-Control', 'no-cache');
+            self.end_headers();
+
+        except Exception as _err:
+            print( _err );
+        # ---------------------------------------------------------
+
+    # =================================================================
+    def do_GET(self):
+
+        # -------------------------------------------------------------
+        try:
+
+            # -------------------------------------------------------------
+            self.server.REMOTE_IP = str(self.client_address[0]);
+            self.SET_HEADERS( self.server.CODE, self.server.TYPE );
+
+            # -------------------------------------------------------------
+            # Create self.server.THIS_PAGE based on self.path
+            self.server.PROCESS( self.path );
+
+            if self.server.IS_LOCKED():
+                self.ECHO("HTTP Error 502 Bad gateway / Apache2 v2.4.23");
+
+            elif self.server.IS_AJAX_REQ:
+                self.ECHO( str(self.server.AJAX_RET_VAL) ); # <= AJAX-RESPONSE
+
+            else:
+
+                PAGE = open("html/main.tpl.html").read()
+
+                CSS = open( self.server.APP["css_1"] ).read();
+                CSS += open( self.server.APP["css_2"] ).read();
+
+
+                PAGE = PAGE.replace("{CSS}", CSS );
+
+                JS = open( self.server.APP["js_1"] ).read()+"\n"; # MAIN-LIB
+                #JS += open( self.server.APP["js_2"] ).read(); # GET/POST
+                #JS += open( self.server.APP["js_3"] ).read(); # SIMULATE/KEYS
+
+                PAGE = PAGE.replace("{JS}", JS  );
+
+                PAGE = PAGE.replace( "{WRAPPER}", self.server.THIS_PAGE );
+                PAGE = PAGE.replace( "{HEADER}", self.server.HEADER );
+                PAGE = PAGE.replace( "{FOOTER}", self.server.RESPONSE );
+
+                self.ECHO( PAGE );
+
+            # -------------------------------------------------------------
+
+        except Exception as _err:
+            print( _err );
+
+        # -------------------------------------------------------------
+
+    # =================================================================
+    def ECHO( self, _data ):
+        self.wfile.write( _data );
+
+    # =================================================================
+    def do_HEAD(self):
+        
+        # ---------------------------------------------------------
+        self.SET_HEADERS()
+        # ---------------------------------------------------------
+        
+    # =================================================================
+    def do_POST(self):
+
+        # ---------------------------------------------------------
+        self.SET_HEADERS()
+        self.wfile.write("<html><body><h1>POST!</h1></body></html>")
+
+        # ---------------------------------------------------------
+
+#######################################################################################
+if __name__ == "__main__":
+    
+    _Server = Server();
+
+# ######################################################################################                                        
+
+
+
+
+
+
+
+
+
+
+
+
