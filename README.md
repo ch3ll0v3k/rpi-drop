@@ -14,4 +14,4 @@ Aircrack-ng, WASH, KISMET, MDK3, REAVER ...
 <img src="screenshots/wash.png" width="360px" style="padding: 10px;"/>
 <img src="screenshots/wireless.png" width="360px" style="padding: 10px;"/>
 <img src="screenshots/wps-db.png" width="360px" style="padding: 10px;"/>
-<img src="screenshots/terminal-full.png" width="360px" style="padding: 10px;"/>
+<img src="screenshots/terminal-full.png" width="720px" style="padding: 10px;"/>
