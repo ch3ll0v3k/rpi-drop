@@ -17,13 +17,197 @@
     </script> 
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <style type="text/css">
+    #message-box-wrapper{
+        z-index: 0; margin: 0; display: none; text-align: center;
+        position: fixed; width: 100%; min-height: 100%; background: rgba(51,51,51, 0.4);
+    }
+
+    #message-box{
+        transition: all 0.6s; display: block; padding: 10px 0;
+        width: 80%; min-height: 50px; background: #58e; border: solid 6px #fff; 
+        box-shadow: 0 0 6px #000; margin: 20px auto 0 auto; text-align: center;
+
+
+    }
+
+    #message-box-title{
+        display: inline-block; margin: 5px auto;
+        width: 90%; border-bottom: dashed 1px #777; padding: 6px 0; text-transform: uppercase;
+        font-size: 22px; color: #fff; text-shadow: 1px 1px 2px #000; font-weight: bold;
+
+    }
+
+    #message-box-body{
+        display: inline-block; margin: 5px auto; width: 90%; min-height: 100px;
+        font-size: 18px; color: #fff; text-shadow: 1px 1px 2px #000;
+
+    }
+
+    #message-box-btn:hover{
+        display: inline-block; cursor: pointer;
+    }
+
+
+    </style>
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <script type="text/javascript">
+
+        // ============================================================
+        var all_rows_memory = [
+            // INDEX
+            'index-wireless-row',
+            'index-system-row',
+            'index-settings-row',
+            'index-console-row',
+            // AIRMON-NG
+            'airmon-ng-row',
+            'airodump-ng-row',
+            'airmon-ng-console-row',
+            // REAVER
+            'reaver-params-row',
+            'reaver-console-row',
+            // KISMET
+            'kismet-row',
+            'kismet-console-row',
+            // MDK-3
+            'mdk3-row',
+            'mdk3-console-row',
+            // WASH
+            'wash-row',
+            'wash-console-row',
+            // WPS-DB
+            'wps-row',
+            'wps-console-row',
+
+        ];
+
+        // ============================================================
+        window.addEventListener('load', function(){
+            getMenusOpenState();
+
+        });
+
+        // ============================================================
+        function message_box_hide(){
+
+            _byId('message-box').style.marginTop = "-720px";
+
+            setTimeout( function(){
+                _byId('message-box-wrapper').style.display = 'none';
+                document.body.style.overflow = '';
+                    
+            }, 100);
+
+        }
+
+        // ============================================================
+        function message_box_show( msg ){
+
+            _byId('message-box-body').innerHTML = msg;
+
+            _byId('message-box-wrapper').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+
+            setTimeout( function(){
+                _byId('message-box').style.marginTop = "45px";
+            }, 100);
+
+        }
+    
+        // ============================================================
+        function main_action_func(){
+            window.location.reload();
+            // message_box_show('This is test message');
+        }
+
+        // ============================================================
+        function getMenusOpenState() {
+
+            /* console.log('--------------------------------------');
+            for (var i=0; i<all_rows_memory.length; i++) {
+                var val = localStorage.getItem( all_rows_memory[i] );
+                console.log( all_rows_memory[i]+' : '+val);
+            } */
+ 
+            for (var i=0; i<all_rows_memory.length; i++) {
+
+                var _val = localStorage.getItem( all_rows_memory[i] );
+ 
+                if( _val != '' && _val != null &&_val != undefined  ){
+    
+                    try{
+
+                        _byId( all_rows_memory[i] ).className = _val;
+                        var nodes = _byId( all_rows_memory[i] ).childNodes;
+                        
+                        for (var jj=0; jj<nodes.length; jj++) {
+
+                            if( nodes[jj].className != undefined ){
+                                if( nodes[jj].className.indexOf('wide_lable') != -1 ){
+
+                                    nodes = nodes[jj].childNodes;
+                                    if( nodes[0].className == 'hide_unhide' ){ nodes[0].innerHTML = _val == 'row-box-closed' ? '+' : '-'; break; }
+                                    if( nodes[1].className == 'hide_unhide' ){ nodes[1].innerHTML = _val == 'row-box-closed' ? '+' : '-'; break; }
+
+                                }
+                            }
+                        }
+
+                    }catch(e){}
+
+                }
+            }
+ 
+        }
+
+        // ============================================================
+        function hide_unhide(elem){
+
+            // --------------------------------------------------------
+            try{
+
+                if( elem.parentNode.parentNode.className == 'row-box-closed' ){
+                    elem.parentNode.parentNode.className = 'row-box';
+                    elem.innerHTML = '-';
+
+                }else{
+                    elem.parentNode.parentNode.className = 'row-box-closed';
+                    elem.innerHTML = '+';
+
+                }
+
+                var _id = elem.parentNode.parentNode.id;
+
+                if( _id != '' && _id != null &&_id != undefined  )
+                    localStorage.setItem( elem.parentNode.parentNode.id, elem.parentNode.parentNode.className);
+
+            }catch(e){  }
+
+            // --------------------------------------------------------
+        }
+
+        // ============================================================
+        
+    </script>
 
 </head>
 
 <body>
     <!-- ================================ -->
     <div id="debug-box">[info]</div>
-    <div id="reload" onclick="window.location.reload()">R</div>
+    <div id="reload" onclick="main_action_func()">R</div>
+
+    <!-- ================================ -->
+    <div id="message-box-wrapper">
+        <div id="message-box">
+
+            <div id="message-box-title">Notification</div>
+            <div id="message-box-body"></div>
+            <div id="message-box-btn" class="wide_btn_center" onclick="message_box_hide()">close</div>
+
+        </div>
+    </div>
 
     <!-- ================================ -->
     <content-header>

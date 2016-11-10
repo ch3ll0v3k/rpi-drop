@@ -47,39 +47,4 @@ function getXmlHttp(){
 }
 
 // ================================================================================
-function hide_unhide(elem){
-
-    // --------------------------------------------------------
-    try{
-
-        if( elem.parentNode.parentNode.className == 'row-box-closed' ){
-
-            if( elem.is_open ){
-                elem.is_open = false; elem.innerHTML = '-';
-                elem.parentNode.parentNode.style.height = "48px";
-
-            }else{
-                elem.is_open = true; elem.innerHTML = '+';
-                elem.parentNode.parentNode.style.height = "auto";
-            }
-
-        }else{
-
-            if( !elem.is_open ){
-                elem.is_open = true; elem.innerHTML = '+';
-                elem.parentNode.parentNode.style.height = "48px";
-
-            }else{
-                elem.is_open = false; elem.innerHTML = '-';
-                elem.parentNode.parentNode.style.height = "auto";
-            }
-
-        }
-
-    }catch(e){  }
-
-    // --------------------------------------------------------
-}
-
-// ================================================================================
 

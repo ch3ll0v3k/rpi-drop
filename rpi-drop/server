@@ -36,6 +36,7 @@ class Server( HTTPServer ):
             "settings"      : ROOT+"html/settings.html",
             "system"        : ROOT+"html/system.html",
             "index"         : ROOT+"html/index.html",
+            "404"           : ROOT+"html/404.html",
 
             # tools
             #"scanner"       : ROOT+"html/scanner.html",
@@ -145,9 +146,11 @@ class Server( HTTPServer ):
 
             if _p == "/":
                 self.THIS_PAGE = open( self.APP["index"] ).read();
+                self.RESPONSE = "STATUS: [200:index]";
 
             else:
     
+                self.RESPONSE = "PRP: => ";
                 if _p[0] == "/": _p = _p[1:];
                 if _p[-1] == "/": _p = _p[0:len(_p)-1];
 
@@ -215,14 +218,19 @@ class Server( HTTPServer ):
                     # self.EXEC( self.CTRL[ _p[0] ][ _o[1] ] );
 
                 else:
-                    self.THIS_PAGE = open( ROOT+"html/"+_p[0]+".html" ).read();
 
+                    if os.path.isfile( ROOT+"html/"+_p[0]+".html" ):
+                        self.THIS_PAGE = open( ROOT+"html/"+_p[0]+".html" ).read();
+                        self.CODE = 200;
+                        self.RESPONSE += "STATUS: [200]";
+
+                    else:
+                        self.THIS_PAGE = open( self.APP["404"] ).read();
+                        self.CODE = 404;
+                        self.RESPONSE += "STATUS: [404]";
 
                 self.THIS_PAGE = self.REPLACE_HOLDERS( self.THIS_PAGE );
-                #print("self.THIS_PAGE: ["+self.THIS_PAGE+"]" );
 
-            self.CODE = 200;
-            self.RESPONSE = "STATUS: [200]";
 
         except Exception as _err:
             self.DEBUG();
