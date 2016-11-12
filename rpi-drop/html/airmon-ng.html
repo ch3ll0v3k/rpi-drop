@@ -48,7 +48,7 @@
 
 <div class="row-box-closed" id="airmon-ng-row">
     <div class="wide_lable _lblue">
-        <div class="hide_unhide" onclick="hide_unhide( this )">-</div>
+        <div class="hide_unhide  line_icon_set set_36px" onclick="hide_unhide( this )"></div>
         airmon-ng
     </div>
 
@@ -59,11 +59,15 @@
 
 <div class="row-box-closed" id="airodump-ng-row">
     <div class="wide_lable _lblue">
-        <div class="hide_unhide" onclick="hide_unhide( this )">-</div>
+        <div class="hide_unhide  line_icon_set set_36px" onclick="hide_unhide( this )"></div>
         airodump-ng
     </div>
 
+    <!--
     <a class="wide_btn _lgreen" onclick="REQ('/act/rm/-f/data_cap_*/;/airodump-ng/mon0/--manufacturer/--output-format/netxml/--write/data_cap_/\&')">start</a>
+    -->
+    <a class="wide_btn _lgreen" onclick="REQ('/act/rm/-f/data_cap_*/')">rm -f ./*.cap</a>
+    <a class="wide_btn _lgreen" onclick="REQ('/act/airodump-ng/mon0/--manufacturer/--output-format/netxml/--write/data_cap_/\&')">start</a>
     <a class="wide_btn _lred" onclick="REQ('/act-ret/pkill/airodump-ng')">stop</a>
 
 </div>
@@ -72,7 +76,7 @@
 <div class="row-box-closed" id="airmon-ng-console-row">
 
     <div class="wide_lable _lblue">
-        <div class="hide_unhide" onclick="hide_unhide( this )">-</div>
+        <div class="hide_unhide  line_icon_set set_36px" onclick="hide_unhide( this )"></div>
         console
     </div>
 
@@ -84,3 +88,8 @@
     <a class="wide_btn _lblue" onclick="REQ('/get-ret/.%2Fparse-xml/data_cap_-01.kismet.netxml')">kismet.netxml</a>
 </div>
 
+<!-- ====================================================================== -->
+<style type="text/css">
+    content-footer{ display: none !important; }
+    content-wrapper{ border-bottom: none !important; }
+</style>

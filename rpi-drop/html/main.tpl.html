@@ -28,7 +28,6 @@
         width: 80%; min-height: 50px; background: #58e; border: solid 6px #fff; 
         box-shadow: 0 0 6px #000; margin: 20px auto 0 auto; text-align: center;
 
-
     }
 
     #message-box-title{
@@ -54,7 +53,9 @@
     <script type="text/javascript">
 
         // ============================================================
-        var all_rows_memory = [
+        var left_slide_menu, top_nav_menu;
+
+        var all_rows_memory = [ // tabs open/close state memory
             // INDEX
             'index-wireless-row',
             'index-system-row',
@@ -84,9 +85,49 @@
 
         // ============================================================
         window.addEventListener('load', function(){
+
+            left_slide_menu = _byId('left-slide-menu');
+            top_nav_menu = _byId('top-nav-menu');
+
             getMenusOpenState();
+            inflateSlideMenu();
 
         });
+
+        // ============================================================
+        var slide_menu_items = [
+            'settings',
+            'system',
+            'terminal',
+
+        ];
+
+        var menu_item_tpl = ''; 
+
+        menu_item_tpl += '<a href="/{MENU-NAME-ITEM}"> '; 
+        menu_item_tpl += '    <div class="content-menu-body-item-wrapper">'; 
+        menu_item_tpl += '        <div class="line_icon_set m_icon set_36px icon-set-{MENU-NAME-ITEM}"></div>'; 
+        menu_item_tpl += '        <div class="content-menu-body-item">{MENU-NAME-ITEM}</div>'; 
+        menu_item_tpl += '    </div>'; 
+        menu_item_tpl += '</a>'; 
+
+        function inflateSlideMenu(){
+            var menu_body = _byId('content-menu-body');
+            menu_body.innerHTML = '';
+
+            for (var i=0; i<slide_menu_items.length; i++) {
+
+                var this_item = menu_item_tpl;
+                this_item = this_item.replace(/{MENU-NAME-ITEM}/g, slide_menu_items[i]);
+
+                console.log( slide_menu_items[i]+' :: '+this_item );
+
+
+                menu_body.innerHTML += this_item;
+            }
+
+            
+        }
 
         // ============================================================
         function message_box_hide(){
@@ -169,11 +210,11 @@
 
                 if( elem.parentNode.parentNode.className == 'row-box-closed' ){
                     elem.parentNode.parentNode.className = 'row-box';
-                    elem.innerHTML = '-';
+                    //elem.innerHTML = '-';
 
                 }else{
                     elem.parentNode.parentNode.className = 'row-box-closed';
-                    elem.innerHTML = '+';
+                    //elem.innerHTML = '+';
 
                 }
 
@@ -188,15 +229,38 @@
         }
 
         // ============================================================
+        // top_nav_menu
+
+        function slide_menu_o() {
+
+            // --------------------------------------------------------
+            left_slide_menu.style.marginLeft = '0px';
+            // --------------------------------------------------------
+        }
+
+        function slide_menu_c() {
+
+            // --------------------------------------------------------
+            left_slide_menu.style.marginLeft = '-325px';
+            // --------------------------------------------------------
+
+        }
+
+        // ============================================================
+        function gesture_detector(evt) {
+            
+        }
+
+        // ============================================================
         
     </script>
 
 </head>
 
 <body>
+    <!-- ::::::::::::::::::::: [POSITION: ABSOLUTE;] :::::::::::::::::::::::::: -->
     <!-- ================================ -->
     <div id="debug-box">[info]</div>
-    <div id="reload" onclick="main_action_func()">R</div>
 
     <!-- ================================ -->
     <div id="message-box-wrapper">
@@ -210,19 +274,46 @@
     </div>
 
     <!-- ================================ -->
-    <content-header>
 
-        <a class="menu_btn _lred"   onclick="_GO('<')">&lt;&lt;</a>
-        <a class="menu_btn _lwhite" href="/">HOME</a>
-        <!--
-        <a class="menu_btn _lred"   href="/settings">SETTINGS</a>
-        <a class="menu_btn _lgreen" href="/system">SYSTEM</a>
-        -->
-        <a class="menu_btn _lblue"  href="/lock">LOCK</a>
+    <content-menu id="left-slide-menu">
+
+        <!-- :::::::::::::::: -->
+        <div id="content-menu-header">
+            <div id="content-menu-title">Navigation</div> 
+            <div id="content-menu-ctrl-close-icon" class="line_icon_set m_icon set_40px icon-set-hide-menu" onclick="slide_menu_c()">&nbsp;</div>
+
+        </div>
+
+        <!-- :::::::::::::::: -->
+        <div id="content-menu-body">
+            <!-- [filled up from JS] -->
+
+        </div>
+    
+        <!-- :::::::::::::::: -->
+        <div id="content-menu-footer">
+            <a href="/lock">
+                <div class="content-menu-body-item-wrapper" style="background: #999;">
+                    <div class="line_icon_set m_icon set_36px icon-set-lock"></div>
+                    <div class="content-menu-body-item">lock</div>
+                </div>
+            </a>
+
+        </div>
+        <!-- :::::::::::::::: -->
+
+    </content-menu>
+
+    <!-- ::::::::::::::::::::: [/POSITION: ABSOLUTE;] :::::::::::::::::::::::::: -->
+    <content-header id="top-nav-menu">
+
+        <a style="text-decoration: none !important;" onclick="_GO('<')"> <div class="line_icon_set header-btn-back"></div> </a>
+        <a style="text-decoration: none !important;" onclick="main_action_func()"> <div class="line_icon_set header-btn-reload"></div> </a>
+        <a style="text-decoration: none !important;" href="/"> <div class="line_icon_set header-btn-home"></div> </a>
+        <a style="text-decoration: none !important;" onclick="slide_menu_o()"> <div class="line_icon_set header-btn-menu"></div> </a>
 
     </content-header>
 
-    <!-- ================================ -->
     <content-wrapper>
         {WRAPPER}
     </content-wrapper>
@@ -231,7 +322,8 @@
     <content-footer>
         {FOOTER}
     </content-footer>
-    <!-- ================================ -->
+
+    <!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
 
 </body>
 </html>

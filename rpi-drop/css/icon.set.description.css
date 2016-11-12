@@ -1,0 +1,95 @@
+/* all cions: 52px x 52px */
+
+.header-btn-reload:hover{ cursor: pointer; }
+.header-btn-reload{ 
+    display: inline-block; width: 48px; height: 48px; background-position: -301px -501px; 
+}
+
+.header-btn-back:hover{ cursor: pointer; }
+.header-btn-back{ 
+    display: inline-block; width: 48px; height: 48px; background-position: -1px -1051px; 
+}
+
+.header-btn-home:hover{ cursor: pointer; }
+.header-btn-home{ 
+    display: inline-block; width: 48px; height: 48px; background-position: -451px -751px; 
+}
+
+.header-btn-menu:hover{ cursor: pointer; }
+.header-btn-menu{ 
+    display: inline-block; width: 48px; height: 48px; background-position: -201px -901px;
+}
+
+/* :;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; */
+.m_icon{
+    box-shadow: 0 0 4px #333; border: solid 2px #aaa !important; 
+    vertical-align: top; cursor: pointer;
+    background-position: -321px -721px;
+    /*
+    border: none !important;
+    */
+}
+
+.m_icon:hover{
+    box-shadow: 0 0 12px #000; border: solid 2px #F00 !important; cursor: pointer !important;
+}
+
+
+/* *********************************************************************** */
+/* set_40px */
+.icon-set-settings{ background-position: -1px -201px;  }
+.icon-set-system{ background-position: -41px -201px; }
+.icon-set-lock{ background-position: -281px -161px; }
+.icon-set-hide-menu{ background-position: -121px -401px; }
+
+
+/* *********************************************************************** */
+/* set_36px */
+
+.icon-set-terminal{ background-position: -73px -577px;  }
+.icon-set-home{ background-position: -325px -541px;  }
+
+.icon-set-settings{ background-position: -1px -181px;  }
+.icon-set-system{ background-position: -37px -181px; }
+.icon-set-unlock{ background-position: -253px -145px; }
+.icon-set-lock{ background-position: -289px -145px; }
+/*.icon-set-hide-menu{ background-position: -109px -361px; }*/
+
+.icon-set-pluss{ background-position: -181px -649px; }
+.icon-set-minus{ background-position: -217px -649px; }
+.icon-set-ok{ background-position: -289px -649px; }
+.icon-set-not-ok{ background-position: -253px -649px; }
+
+
+.icon-set-clock{ background-position: -217px -181px; }
+.icon-set-alarm{ background-position: -181px -181px; }
+.icon-set-calender{ background-position: -145px -181px; }
+.icon-set-location{ background-position: -1px -217px; }
+.icon-set-pin{ background-position: -37px -37px; }
+.icon-set-atachment{ background-position: -109px -37px; }
+
+.icon-set-lable-side{ background-position: -181px -469px; }
+.icon-set-lable-up{ background-position: -145px -469px; }
+
+.icon-set-day{ background-position: -217px -505px; }
+.icon-set-night{ background-position: -325px -505px;  }
+.icon-set-sound{ background-position: -109px -325px; }
+.icon-set-no-sound{ background-position: -145px -325px; }
+.icon-set-search{ background-position: -109px -721px; }
+
+.icon-set-toggle-on{ background-position: -73px -181px; }
+.icon-set-toggle-off{ background-position: -109px -181px; }
+
+.icon-set-delete{ background-position: -109px -73px; }
+.icon-set-save{ background-position: -37px -289px; }
+
+.icon-set-left{ background-position: -217px -757px; }
+.icon-set-up{ background-position: -289px -757px; }
+.icon-set-right{ background-position: -253px -757px; }
+.icon-set-down{ background-position: -325px -757px; }
+
+.icon-set-clowd{ background-position: -289px -469px; }
+
+/* *********************************************************************** */
+
+

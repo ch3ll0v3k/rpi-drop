@@ -13,6 +13,10 @@ function _byTag(tagName){ return document.getElementsByTagName(tagName); }
 function _newElem(type){ return document.createElement(type); }
 function _randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min;  }
 
+var _DEBUG_ = true;
+
+function DEBUG(){ _DEBUG_= !_DEBUG_; }
+
 // ================================================================================
 function _GO( _side ){
 

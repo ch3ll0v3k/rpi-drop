@@ -1,6 +1,7 @@
 <script type="text/javascript">
+
     // ================================================================
-    function REQ( link ) {
+    function REQ( link, m_box ) {
 
         var _AJAX_ = getXmlHttp();
 
@@ -9,6 +10,9 @@
         // _AJAX_.setRequestHeader('_status_', 'custom-data');
         // -------------------------------------------
         _AJAX_.onreadystatechange = function () {
+
+            if(_DEBUG_) console.log( _AJAX_.readyState+' / '+_AJAX_.status );
+
             if(_AJAX_.readyState == 4 && _AJAX_.status == 200){
                 // ---------------------------------------------------------
                 // var seconds = new Date().getTime() / 1000;
@@ -25,10 +29,28 @@
                 DATA = _AJAX_.responseText.replace( / /gi , '&nbsp;');
                 DATA = DATA.replace( /\n/ig , '<br>').trim();
 
-
                 _byId("page-output-terminal").innerHTML += DATA;
                 _byId("page-output-terminal").innerHTML += '<br/>';
+
+                // ---------------------------------------------------------
+                if( m_box == 'show' )
+                    message_box_show( link+'<br/>HTTT:200' );
+
+                // ---------------------------------------------------------
+
+            }else if(_AJAX_.readyState == 4 && _AJAX_.status == 0){
+
+                message_box_show( 'SERVER: DOES NOT RESPNSE' );
+
+            } else{
+
+                var sts = _AJAX_.status >> 2; // http 3xx, 4xx, 5xx 
+                if( sts == 3 || sts == 4 || sts == 5 || sts == 6 ) {
+                    message_box_show( link+'<br/>HTT:'+sts+'xx' );
+                }
+
             }
+
         }
 
         _AJAX_.send(null);
@@ -52,12 +74,12 @@
 <!-- ====================================================================== -->
 <div class="row-box-closed" id="wash-row">
     <div class="wide_lable _lblue">
-        <div class="hide_unhide" onclick="hide_unhide( this )">-</div>
+        <div class="hide_unhide  line_icon_set set_36px" onclick="hide_unhide( this )"></div>
         wash init
     </div>
     <a class="wide_btn _lgreen" onclick="REQ('/act/wash/-C/-s/-i/mon0/>/wash.out/\&')">wash -s</a>
     <a class="wide_btn _lgreen" onclick="REQ('/act/wash/-C/-u/-i/mon0/>/wash.out/\&')">wash -u</a>
-    <a class="wide_btn_center _lred" onclick="REQ('/act-ret/pkill/wash')">stop</a>
+    <a class="wide_btn_center _lred" onclick="REQ('/act-ret/pkill/wash', 'show')">stop</a>
 
 </div>
 
@@ -65,7 +87,7 @@
 <div class="row-box-closed" id="wash-console-row">
 
     <div class="wide_lable _lblue">
-        <div class="hide_unhide" onclick="hide_unhide( this )">-</div>
+        <div class="hide_unhide  line_icon_set set_36px" onclick="hide_unhide( this )"></div>
         console
     </div>
 
@@ -77,5 +99,9 @@
 </div>
 
 <!-- ====================================================================== -->
+<style type="text/css">
+    content-footer{ display: none !important; }
+    content-wrapper{ border-bottom: none !important; }
+</style>
 
 

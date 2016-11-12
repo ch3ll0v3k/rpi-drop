@@ -27,6 +27,8 @@ class Server( HTTPServer ):
             # server 
             "css_1"         : ROOT+"css/ids.css",
             "css_2"         : ROOT+"css/media.css",
+            "css_3"         : ROOT+"css/base64.png.css",
+            "css_4"         : ROOT+"css/icon.set.description.css",
 
             "js_1"          : ROOT+"js/temax-main-v1.0.0.js", # MAIN-LIB
             "js_2"          : ROOT+"js/js_2.js", # GET/POST
@@ -44,7 +46,7 @@ class Server( HTTPServer ):
         }
 
         # -------------------------------------------------------------
-        self.INTERFACE                              = "wlan0"; #"eth1";
+        self.INTERFACE                              = "eth1"; # default
         self.ARCH                                   = "Intel - x32";
         self.IS_ARM                                 = False;
 
@@ -187,6 +189,10 @@ class Server( HTTPServer ):
                                 
                             else:
                                 self.AJAX_RET_VAL = "ALLREADY-ENABLED: [mon0]";
+
+                        elif _p[2] == "stop":
+                            self.EXEC( " ".join( _p[1:] ), RET=True );
+
 
                     else:
                         self.EXEC( " ".join( _p[1:] ), RET=True );
@@ -371,7 +377,8 @@ class HANDLER(BaseHTTPRequestHandler):
 
                 CSS = open( self.server.APP["css_1"] ).read();
                 CSS += open( self.server.APP["css_2"] ).read();
-
+                CSS += open( self.server.APP["css_3"] ).read();
+                CSS += open( self.server.APP["css_4"] ).read();
 
                 PAGE = PAGE.replace("{CSS}", CSS );
 
