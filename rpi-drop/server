@@ -20,7 +20,6 @@ class Server( HTTPServer ):
     def __init__(self):
 
         # -------------------------------------------------------------
-        self.THIS_PAGE = "";
 
         self.APP = {
 
@@ -46,6 +45,12 @@ class Server( HTTPServer ):
         }
 
         # -------------------------------------------------------------
+        self._NAME_                                 = "RPi-DROP";
+        self._VERSION_                              = "v0.0.4";
+
+        # -------------------------------------------------------------
+        self.THIS_PAGE                              = "";
+
         self.INTERFACE                              = "eth1"; # default
         self.ARCH                                   = "Intel - x32";
         self.IS_ARM                                 = False;
@@ -392,6 +397,10 @@ class HANDLER(BaseHTTPRequestHandler):
                 PAGE = PAGE.replace( "{HEADER}", self.server.HEADER );
                 PAGE = PAGE.replace( "{FOOTER}", self.server.RESPONSE );
 
+
+                PAGE = PAGE.replace('{TITLE}',     self.server._NAME_);
+                PAGE = PAGE.replace('{VERSION}',   self.server._VERSION_);
+                
                 self.ECHO( PAGE );
 
             # -------------------------------------------------------------

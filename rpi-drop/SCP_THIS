@@ -1,0 +1,6 @@
+#!/bin/bash
+
+
+#echo "0: $0";
+sshpass -p 'unixlike7' scp -r -P 50000 $1 root@10.20.30.1:/m-sys/x/python/rpi-drop/rpi-drop/
+echo "1: $1";

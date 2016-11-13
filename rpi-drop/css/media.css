@@ -11,13 +11,13 @@
     .t_space_{ width: 110px !important; }
 
     /* ---------------------------------------------------*/
-    .wide_btn_center{ width: 91% !important; }
-    .s_wide_btn{ width: 91% !important;  }
-    .wide_btn{ width: 91% !important;  }
+    .wide_btn_center{ width: 44% !important; } /* 91% */
+    .s_wide_btn{ width: 44% !important; } /* 91% */
+    .wide_btn{ width: 44% !important; } /* 91% */
 
     /* ---------------------------------------------------*/
-    .input-lable{ width: 40%; }
-    .data-input{ width: 50%; }
+    .input-lable{ width: 30%; } /* 40% */
+    .data-input{ width: 61%; } /* 50% */
 
     /* ---------------------------------------------------*/
     #page-output-terminal{ width: 96% !important; }
@@ -39,13 +39,13 @@
     .t_space_{ width: 110px !important; }
 
     /* ---------------------------------------------------*/
-    .wide_btn_center{ width: 91% !important; }
-    .s_wide_btn{ width: 91% !important;  }
-    .wide_btn{ width: 91% !important;  }
+    .wide_btn_center{ width: 44% !important; } /* 91% */
+    .s_wide_btn{ width: 44% !important; } /* 91% */
+    .wide_btn{ width: 44% !important; } /* 91% */
 
     /* ---------------------------------------------------*/
-    .input-lable{ width: 40%; }
-    .data-input{ width: 50%; }
+    .input-lable{ width: 30%; } /* 40% */
+    .data-input{ width: 61%; } /* 50% */
 
     /* ---------------------------------------------------*/
     #page-output-terminal{ width: 92% !important; }
@@ -66,13 +66,13 @@
     .t_ksp{ width: 40px !important; }
     .t_space_{ width: 110px !important; }
     /* ---------------------------------------------------*/
-    .wide_btn_center{ width: 91% !important; }
-    .s_wide_btn{ width: 91% !important;  }
-    .wide_btn{ width: 91% !important;  }
+    .wide_btn_center{ width: 44% !important; } /* 91% */
+    .s_wide_btn{ width: 44% !important; } /* 91% */
+    .wide_btn{ width: 44% !important; } /* 91% */
 
     /* ---------------------------------------------------*/
-    .input-lable{ width: 32%; }
-    .data-input{ width: 60%; }
+    .input-lable{ width: 30%; } /* 40% */
+    .data-input{ width: 61%; } /* 50% */
 
     /* ---------------------------------------------------*/
     #page-output-terminal{ width: 92% !important; }
@@ -93,13 +93,13 @@
     .t_space_{ width: 110px !important; }
 
     /* ---------------------------------------------------*/
-    .wide_btn_center{ width: 74% !important; }
-    .s_wide_btn{ width: 74% !important;  }
-    .wide_btn{ width: 74% !important;  }
+    .wide_btn_center{ width: 29% !important; } /* 74% */
+    .s_wide_btn{ width: 29% !important;  } /* 74% */
+    .wide_btn{ width: 29% !important;  } /* 74% */
 
     /* ---------------------------------------------------*/
-    .input-lable{ width: 32%; }
-    .data-input{ width: 60%; }
+    .input-lable{ width: 30%; } /* 40% */
+    .data-input{ width: 61%; } /* 50% */
 
     /* ---------------------------------------------------*/
     #page-output-terminal{ width: 92% !important; }
@@ -126,8 +126,8 @@
     .wide_btn{ width: 29% !important; }
 
     /* ---------------------------------------------------*/
-    .input-lable{ width: 32%; }
-    .data-input{ width: 60%; }
+    .input-lable{ width: 24%; }
+    .data-input{ width: 70%; }
 
     /* ---------------------------------------------------*/
 

@@ -5,7 +5,9 @@
     window.addEventListener('load', function(){ /* */ });
 
     // ================================================================
-    function REQ_INDEX( link ) {
+    function _clear(){ _byId('page-output-terminal').innerHTML = ''; }
+
+    function REQ( link ) {
 
         // --------------------------------------------------------
         var _AJAX_ = getXmlHttp();
@@ -26,14 +28,20 @@
 </script>
 
 <!-- ====================================================================== -->
-<div class="row-box" id="mdk3-row">
-    <div class="wide_lable _lblue">
+<div class="row-box-closed" id="mdk3-row">
+
+    <div class="wide_lable _lred">
         <div class="hide_unhide  line_icon_set set_36px" onclick="hide_unhide( this )"></div>
         MDK-3
     </div>
 
-    <a class="wide_btn _lgreen" onclick="REQ('/act-ret/')">act</a>
-    <a class="wide_btn _lred" onclick="REQ('/act-ret/')">act</a>
+    <div class="data-input-box">
+        <input disabled="disabled" class="input-lable" value="lable"/>
+        <input id="_ID_" class="data-input" placeholder="PARAMS" value="PARAMS"/>
+    </div>
+
+    <a class="s_wide_btn _lblue" href="/act-ret">act-ret</a>
+    <a class="s_wide_btn _lgreen" href="/act-ret">act-ret</a>
 
 </div>
 
@@ -42,13 +50,12 @@
 
     <div class="wide_lable _lblue">
         <div class="hide_unhide  line_icon_set set_36px" onclick="hide_unhide( this )"></div>
-        console
+        output
     </div>
 
-    <div id="page-output-terminal">#/output</div>
+    <div id="page-output-terminal"> #/output </div>
 
-    <a class="s_wide_btn _lgreen" onclick="REQ('/act-ret/')">act</a>
-    <a class="s_wide_btn _lred" onclick="REQ('/act-ret/')">act</a>
+    <a class="wide_btn_center _lred" onclick="_clear()">clear</a>
 
 </div>
 

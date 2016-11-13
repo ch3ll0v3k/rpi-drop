@@ -7,13 +7,13 @@
     // ================================================================
     function _clear(){ _byId('page-output-terminal').innerHTML = ''; }
 
-    function REQ( params ) {
+    function REQ( link ) {
 
         // --------------------------------------------------------
         var _AJAX_ = getXmlHttp();
 
-        _AJAX_.open('GET', "http://{IP}:{PORT}"+params, true );
-
+        _AJAX_.open('GET', "http://{IP}:{PORT}"+link, true ); // false SYNC
+        // -------------------------------------------
         _AJAX_.onreadystatechange = function () {
             if(_AJAX_.readyState == 4 && _AJAX_.status == 200){
                 alert( _AJAX_.responseText );
@@ -28,22 +28,19 @@
 </script>
 
 <!-- ====================================================================== -->
-<div class="row-box-closed" id="system-row">
+<div class="row-box-closed" id="tools-row">
 
-    <div class="wide_lable _lgreen">
+    <div class="wide_lable _lred">
         <div class="hide_unhide  line_icon_set set_36px" onclick="hide_unhide( this )"></div>
-        SYSTEM
+        TOOLS
     </div>
 
-    <a class="s_wide_btn _lblue" href="/terminal">terminal</a>
-    <a class="s_wide_btn _lblue" href="/act/_ifupdown">if-up-down</a>
-    <a class="s_wide_btn _lblue" href="/act/reboot">reboot</a>
-    <a class="s_wide_btn _lblue" href="/act/halt">halt</a>
+    <a class="s_wide_btn _lblue" href="/nmap">nmap</a>
 
 </div>
 
 <!-- ====================================================================== -->
-<div class="row-box-closed" id="system-console-row">
+<div class="row-box-closed" id="tools-console-row">
 
     <div class="wide_lable _lblue">
         <div class="hide_unhide  line_icon_set set_36px" onclick="hide_unhide( this )"></div>

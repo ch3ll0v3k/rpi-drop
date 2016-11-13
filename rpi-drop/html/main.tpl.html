@@ -3,7 +3,7 @@
 <head>
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <meta charset="utf-8">
-    <title>{TITLE}</title>
+    <title>{TITLE} {VERSION}</title>
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
@@ -57,29 +57,40 @@
 
         var all_rows_memory = [ // tabs open/close state memory
             // INDEX
-            'index-wireless-row',
-            'index-system-row',
-            'index-settings-row',
             'index-console-row',
+
             // AIRMON-NG
-            'airmon-ng-row',
-            'airodump-ng-row',
-            'airmon-ng-console-row',
+            'airmon-ng-row', 'airodump-ng-row', 'airmon-ng-console-row',
+
             // REAVER
-            'reaver-params-row',
-            'reaver-console-row',
+            'reaver-params-row', 'reaver-console-row',
+
             // KISMET
-            'kismet-row',
-            'kismet-console-row',
+            'kismet-row', 'kismet-console-row',
+
             // MDK-3
-            'mdk3-row',
-            'mdk3-console-row',
+            'mdk3-row', 'mdk3-console-row',
+
             // WASH
-            'wash-row',
-            'wash-console-row',
+            'wash-row', 'wash-console-row',
+
             // WPS-DB
-            'wps-row',
-            'wps-console-row',
+            'wps-row', 'wps-console-row',
+
+            // NMAP
+            'nmap-row', 'nmap-console-row',
+
+            // SYSTEM
+            'system-row', 'system-console-row',
+
+            // WIRELESS
+            'wireless-row', 'wireless-console-row',
+
+            // TOOLS
+            'tools-row', 'tools-console-row',
+
+            // SETTINGS
+            'settings-row', 'settings-console-row',
 
         ];
 
@@ -96,20 +107,22 @@
 
         // ============================================================
         var slide_menu_items = [
+
+            'wireless',
             'settings',
             'system',
             'terminal',
+            'tools',
 
         ];
 
         var menu_item_tpl = ''; 
-
-        menu_item_tpl += '<a href="/{MENU-NAME-ITEM}"> '; 
-        menu_item_tpl += '    <div class="content-menu-body-item-wrapper">'; 
-        menu_item_tpl += '        <div class="line_icon_set m_icon set_36px icon-set-{MENU-NAME-ITEM}"></div>'; 
-        menu_item_tpl += '        <div class="content-menu-body-item">{MENU-NAME-ITEM}</div>'; 
-        menu_item_tpl += '    </div>'; 
-        menu_item_tpl += '</a>'; 
+            menu_item_tpl += '<a href="/{MENU-NAME-ITEM}"> '; 
+            menu_item_tpl += '    <div class="content-menu-body-item-wrapper">'; 
+            menu_item_tpl += '        <div class="line_icon_set m_icon set_36px icon-set-{MENU-NAME-ITEM}"></div>'; 
+            menu_item_tpl += '        <div class="content-menu-body-item">{MENU-NAME-ITEM}</div>'; 
+            menu_item_tpl += '    </div>'; 
+            menu_item_tpl += '</a>'; 
 
         function inflateSlideMenu(){
             var menu_body = _byId('content-menu-body');
@@ -119,13 +132,10 @@
 
                 var this_item = menu_item_tpl;
                 this_item = this_item.replace(/{MENU-NAME-ITEM}/g, slide_menu_items[i]);
-
-                console.log( slide_menu_items[i]+' :: '+this_item );
-
-
+                //console.log( slide_menu_items[i]+' :: '+this_item );
                 menu_body.innerHTML += this_item;
-            }
 
+            }
             
         }
 
@@ -157,9 +167,10 @@
         }
     
         // ============================================================
-        function main_action_func(){
+        function _reloa(){
+     
             window.location.reload();
-            // message_box_show('This is test message');
+     
         }
 
         // ============================================================
@@ -210,11 +221,9 @@
 
                 if( elem.parentNode.parentNode.className == 'row-box-closed' ){
                     elem.parentNode.parentNode.className = 'row-box';
-                    //elem.innerHTML = '-';
 
                 }else{
                     elem.parentNode.parentNode.className = 'row-box-closed';
-                    //elem.innerHTML = '+';
 
                 }
 
@@ -230,26 +239,11 @@
 
         // ============================================================
         // top_nav_menu
-
-        function slide_menu_o() {
-
-            // --------------------------------------------------------
-            left_slide_menu.style.marginLeft = '0px';
-            // --------------------------------------------------------
-        }
-
-        function slide_menu_c() {
-
-            // --------------------------------------------------------
-            left_slide_menu.style.marginLeft = '-325px';
-            // --------------------------------------------------------
-
-        }
+        function slide_menu_o() { left_slide_menu.style.marginLeft = '0px'; }
+        function slide_menu_c() { left_slide_menu.style.marginLeft = '-325px'; }
 
         // ============================================================
-        function gesture_detector(evt) {
-            
-        }
+        // function gesture_detector(evt) { }
 
         // ============================================================
         
@@ -308,7 +302,7 @@
     <content-header id="top-nav-menu">
 
         <a style="text-decoration: none !important;" onclick="_GO('<')"> <div class="line_icon_set header-btn-back"></div> </a>
-        <a style="text-decoration: none !important;" onclick="main_action_func()"> <div class="line_icon_set header-btn-reload"></div> </a>
+        <a style="text-decoration: none !important;" onclick="_reloa()"> <div class="line_icon_set header-btn-reload"></div> </a>
         <a style="text-decoration: none !important;" href="/"> <div class="line_icon_set header-btn-home"></div> </a>
         <a style="text-decoration: none !important;" onclick="slide_menu_o()"> <div class="line_icon_set header-btn-menu"></div> </a>
 

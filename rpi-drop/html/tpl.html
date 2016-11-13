@@ -2,11 +2,11 @@
 <script type="text/javascript">
 
     // ================================================================
+    function _clear(){ _byId('page-output-terminal').innerHTML = ''; }
+    // ================================================================
     window.addEventListener('load', function(){ /* */ });
 
     // ================================================================
-    function _clear(){ _byId('page-output-terminal').innerHTML = ''; }
-
     function REQ( params ) {
 
         // --------------------------------------------------------
@@ -15,6 +15,10 @@
         _AJAX_.open('GET', "http://{IP}:{PORT}"+params, true );
 
         _AJAX_.onreadystatechange = function () {
+
+            _DEBUG_ = false;
+            if(_DEBUG_) console.log( _AJAX_.readyState+' / '+_AJAX_.status+' / '+_AJAX_.responseText );
+
             if(_AJAX_.readyState == 4 && _AJAX_.status == 200){
                 alert( _AJAX_.responseText );
             }
@@ -25,25 +29,31 @@
 
     }
 
+    // ================================================================
+
 </script>
 
 <!-- ====================================================================== -->
-<div class="row-box-closed" id="system-row">
+<div class="row-box-closed" id="{TPL}-row">
 
-    <div class="wide_lable _lgreen">
+    <div class="wide_lable _lred">
         <div class="hide_unhide  line_icon_set set_36px" onclick="hide_unhide( this )"></div>
-        SYSTEM
+        {TPL}
     </div>
 
-    <a class="s_wide_btn _lblue" href="/terminal">terminal</a>
-    <a class="s_wide_btn _lblue" href="/act/_ifupdown">if-up-down</a>
-    <a class="s_wide_btn _lblue" href="/act/reboot">reboot</a>
-    <a class="s_wide_btn _lblue" href="/act/halt">halt</a>
+    <div class="data-input-box">
+        <input disabled="disabled" class="input-lable" value="lable"/>
+        <input id="_ID_" class="data-input" placeholder="PARAMS" value="PARAMS"/>
+    </div>
+
+
+    <a class="s_wide_btn _lblue" href="/act-ret">act-ret</a>
+    <a class="s_wide_btn _lgreen" href="/act-ret">act-ret</a>
 
 </div>
 
 <!-- ====================================================================== -->
-<div class="row-box-closed" id="system-console-row">
+<div class="row-box-closed" id="{TPL}-console-row">
 
     <div class="wide_lable _lblue">
         <div class="hide_unhide  line_icon_set set_36px" onclick="hide_unhide( this )"></div>

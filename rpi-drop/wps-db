@@ -15,6 +15,8 @@ arr = [];
 
 
 # =====================================================================
+L_NR = 0;
+
 DB = open( WPS_DB ).readlines();
 
 if args[0] == "-V":
@@ -43,7 +45,8 @@ if args[0] == "-V":
 
                 # full info
                 #print( "vendor: ["+vendor+"] > model: ["+model+"] > pin: ["+pin+"] > mac: ["+mac+"]" );
-                print(  " mac: ["+mac+"] pin: ["+pin+"]" );
+                print( str(L_NR)+" mac: ["+mac+"] pin: ["+pin+"]" );
+                L_NR += 1;
 
         except Exception as _err: pass;
 
@@ -69,7 +72,8 @@ if args[0] == "-S":
 
             #print(  MAC, ">", mac.upper().strip() );
             if MAC == mac.upper().strip():
-                print( " mac: ["+mac+"] pin: ["+pin+"]" );
+                print( str(L_NR)+" mac: ["+mac+"] pin: ["+pin+"]" );
+                L_NR += 1;
 
 
         except Exception as _err: pass;
@@ -90,7 +94,8 @@ elif args[0] == "-F":
 
             # full info
             #print( "vendor: ["+vendor+"] > model: ["+model+"] > pin: ["+pin+"] > mac: ["+mac+"]" );
-            print(  " mac: ["+mac+"] pin: ["+pin+"]" );
+            print( str(L_NR)+" mac: ["+mac+"] pin: ["+pin+"]" );
+            L_NR += 1;
 
         except Exception as _err: #pass;
             print( _err );

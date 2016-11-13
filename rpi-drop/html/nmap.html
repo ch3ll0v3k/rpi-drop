@@ -1,0 +1,139 @@
+<script type="text/javascript">
+
+    // ================================================================
+    function _clear(){ _byId('page-output-terminal').innerHTML = ''; }
+
+    function REQ( link, m_box ) {
+
+        var _AJAX_ = getXmlHttp();
+
+        _AJAX_.open('GET', "http://{IP}:{PORT}"+link, true );
+
+        // -------------------------------------------
+        _AJAX_.onreadystatechange = function () {
+
+            _DEBUG_ = false;
+            if(_DEBUG_) console.log( _AJAX_.readyState+' / '+_AJAX_.status+' / '+_AJAX_.responseText );
+
+            DATA = _AJAX_.responseText.trim().replace( / /gi , '&nbsp;');
+            DATA = DATA.replace( /\n/ig , '<br>');
+            _byId("page-output-terminal").innerHTML += DATA+'<br/>'
+
+
+            if(_AJAX_.readyState == 4 && _AJAX_.status == 200){
+                // ---------------------------------------------------------
+                // var seconds = new Date().getTime() / 1000;
+                // var time = new Date().getTime();
+
+                // _AJAX_.getAllResponseHeaders();      // 
+                // _AJAX_.getResponseHeader('name');    // 
+                // _AJAX_.readyState                    // == 4
+                // _AJAX_.status                        // == 200
+                // _AJAX_.responseText                  // == text response
+                // ---------------------------------------------------------
+                //alert( _AJAX_.responseText );
+                // ---------------------------------------------------------
+                // * * DATA = _AJAX_.responseText.trim().replace( / /gi , '&nbsp;');
+                // * * DATA = DATA.replace( /\n/ig , '<br>');
+                // * * _byId("page-output-terminal").innerHTML += DATA+'<br/>'
+
+                // ---------------------------------------------------------
+                if( m_box == 'show' )
+                    message_box_show( link+'<br/>HTTT:200' );
+
+                // ---------------------------------------------------------
+
+            }else if(_AJAX_.readyState == 4 && _AJAX_.status == 0){
+
+                message_box_show( 'SERVER: DOES NOT RESPNSE' );
+
+            } else{
+
+                var sts = _AJAX_.status >> 2; // http 3xx, 4xx, 5xx 
+                if( sts == 3 || sts == 4 || sts == 5 || sts == 6 ) {
+                    message_box_show( link+'<br/>HTT:'+sts+'xx' );
+                }
+
+            }
+
+        }
+
+        _AJAX_.send(null);
+
+    }
+
+    // ================================================================
+    function nmap(){
+
+        var ip      = _byId('ip').value.replace( /\//ig, "%2F");
+        var params  = _byId('params').value.replace( /\//ig, "%2F");
+        var mask    = _byId('mask').value.replace( /\//ig, "%2F");
+
+        REQ('/act-ret/nmap/'+params+'/'+ip+''+mask);
+
+    }
+
+    // ================================================================
+    // nmap -Pn 10.20.30.1/24
+
+    // "/" == "%2F"
+    // ================================================================
+
+
+</script>
+
+<!-- ====================================================================== -->
+<div class="row-box-closed" id="nmap-row">
+    <div class="wide_lable _lblue">
+        <div class="hide_unhide  line_icon_set set_36px" onclick="hide_unhide( this )"></div>
+        nmap
+    </div>
+
+    <div class="data-input-box">
+        <input disabled="disabled" class="input-lable" value="ip/24"/>
+        <input id="ip" class="data-input" placeholder="192.168.0.1" value="192.168.0.1"/>
+    </div>
+
+    <div class="data-input-box">
+        <input disabled="disabled" class="input-lable" value="params:"/>
+        <input id="params" class="data-input" placeholder="-Pn" value="-Pn"/>
+    </div>
+
+    <div class="data-input-box">
+        <input disabled="disabled" class="input-lable" value="mask:"/>
+        <input id="mask" class="data-input" placeholder="/24" value=""/>
+    </div>
+
+    <!--
+    <a class="wide_btn_center _lblue" onclick="REQ('/act/nmap/-Pn/10.20.30.1%2F24')">start</a>
+    -->
+
+    <a class="wide_btn_center _lblue" onclick="nmap()">start</a>
+    <a class="wide_btn_center _lred" onclick="REQ('/act-ret/pkill/nmap', 'show')">stop</a>
+
+</div>
+
+<!-- ====================================================================== -->
+<div class="row-box-closed" id="nmap-console-row">
+
+    <div class="wide_lable _lblue">
+        <div class="hide_unhide  line_icon_set set_36px" onclick="hide_unhide( this )"></div>
+        console
+    </div>
+
+    <div id="page-output-terminal">#/output</div>
+
+    <a class="wide_btn _lblue" onclick="_clear()">clear</a>
+    <!--
+    <a class="wide_btn _lblue" onclick="REQ('/act-ret/cat/wash.out')">update</a>
+    -->
+
+</div>
+
+<!-- ====================================================================== -->
+<style type="text/css">
+    content-footer{ display: none !important; }
+    content-wrapper{ border-bottom: none !important; }
+</style>
+
+

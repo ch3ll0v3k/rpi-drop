@@ -1,11 +1,13 @@
 <script type="text/javascript">
     
+    // ================================================================
+    function _clear(){ _byId('page-output-terminal').innerHTML = ''; }
+
     // ====================================================================
     var MARKER = '<div id="marker"></div>';
 
     // ====================================================================
     function REQ( link ) {
-
 
         var _AJAX_ = getXmlHttp();
 
@@ -14,8 +16,8 @@
 
         // if( _mac == ""){ alert("NO-MAC"); return; }
 
-        link = link.replace( "{MAC}", _mac );
-        link = link.replace( "{VEN}", _ven );
+        link = link.replace( "[MAC]", _mac );
+        link = link.replace( "[VEN]", _ven );
 
         //alert("http://[IP]:[PORT]"+link); return;
 
@@ -24,6 +26,11 @@
         // _AJAX_.setRequestHeader('_status_', 'custom-data');
         // -------------------------------------------
         _AJAX_.onreadystatechange = function () {
+
+            _DEBUG_ = false;
+            if(_DEBUG_) console.log( _AJAX_.readyState+' / '+_AJAX_.status+' / '+_AJAX_.responseText );
+
+
             if(_AJAX_.readyState == 4 && _AJAX_.status == 200){
                 // ---------------------------------------------------------
                 // var seconds = new Date().getTime() / 1000;
@@ -61,8 +68,6 @@
 
     }
 
-    // ================================================================
-    function _clear(){ _byId('page-output-terminal').innerHTML = ''; }
 
     // ================================================================
     // reaver/-i/mon0/-b/[MAC]/-p/[PIN]/-vv/
@@ -82,7 +87,7 @@
 
     <div class="data-input-box">
         <input disabled="disabled" class="input-lable" value="-M[ac]"/>
-        <input id="mac" class="data-input" placeholder="MAC" value="mac" />
+        <input id="mac" class="data-input" placeholder="5C:33:8e:xx:xx:xx" value="5C:33:8e:xx:xx:xx" />
     </div>
 
     <div class="data-input-box">
@@ -94,6 +99,9 @@
         <input disabled="disabled" class="input-lable" value="-A[ll]"/>
         <input id="all" class="data-input" placeholder="all" value="-A[ll]" />
     </div>
+
+    <a class="s_wide_btn _lblue" onclick="REQ('/get-ret/.%2Fwps-db/-S/[MAC]')">wps-db <span class="_lgreen">-M</span></a>
+    <a class="s_wide_btn _lblue" onclick="REQ('/get-ret/.%2Fwps-db/-V/[VEN]')">wps-db <span class="_lgreen">-V</span></a>
 
 </div>
 
@@ -109,8 +117,7 @@
         #/output
     </div>
 
-    <a class="s_wide_btn _lblue" onclick="REQ('/get-ret/.%2Fwps-db/-S/[MAC]')">wps-db <span class="_lgreen">-M</span></a>
-    <a class="s_wide_btn _lblue" onclick="REQ('/get-ret/.%2Fwps-db/-V/[VEN]')">wps-db <span class="_lgreen">-V</span></a>
+    <a class="wide_btn _lblue" onclick="_clear()">clear</a>
     <a class="s_wide_btn _lblue" onclick="REQ('/get-ret/.%2Fwps-db/-F')">wps-db <span class="_lgreen">-A</span></a>
 
 </div>
